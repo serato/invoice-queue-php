@@ -44,4 +44,23 @@ class MessageValidatorTest extends AbstractTestCase
 
         return $items;
     }
+
+    /**
+     * @expectedException \Serato\InvoiceQueue\Exception\JsonDecodeException
+     */
+    public function testInvalidJsonString()
+    {
+        $validator = new MessageValidator;
+        $validator->validateString('');
+    }
+
+    /**
+     * @expectedException \Serato\InvoiceQueue\Exception\JsonEncodeException
+     */
+    public function testFailedJsonEncode()
+    {
+        $fp = fopen(__DIR__ . '/resources/schema_validation_data/line_item.php', 'r');
+        $validator = new MessageValidator;
+        $validator->validateArray(['fp' => $fp]);
+    }
 }

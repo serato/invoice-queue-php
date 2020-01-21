@@ -6,6 +6,8 @@ namespace Serato\InvoiceQueue;
 use JsonSchema\SchemaStorage;
 use JsonSchema\Validator;
 use JsonSchema\Constraints\Factory;
+use Serato\InvoiceQueue\Exception\JsonEncodeException;
+use Serato\InvoiceQueue\Exception\JsonDecodeException;
 use Exception;
 
 /**
@@ -28,6 +30,7 @@ class MessageValidator
     {
         $schemaPath = realpath(__DIR__ . '/../resources/invoice_schema.json');
         if (!$schemaPath || !file_exists($schemaPath)) {
+            # This should never happen :-)
             throw new Exception('Unable to load JSON schema file');
         }
         
@@ -40,15 +43,17 @@ class MessageValidator
      * @param array $data
      * @param string|null $definition
      * @return bool
+     *
+     * @throws JsonEncodeException
      */
-    public function validateArray(array $data, ?string $definition): bool
+    public function validateArray(array $data, ?string $definition = null): bool
     {
         # It might seem silly to call json_encode() here and json_decode() in self::validateString
         # But this is the simplest way to ensure that we correctly transpose array hashes into stdclass
         # objects that the JSON schema validator requires.
         $json = json_encode($data);
         if ($json === false) {
-            throw new Exception('Unable to JSON encode data');
+            throw new JsonEncodeException;
         }
         
         return $this->validateString($json, $definition);
@@ -60,12 +65,14 @@ class MessageValidator
      * @param string $json
      * @param string|null $definition
      * @return bool
+     *
+     * @throws JsonDecodeException
      */
-    public function validateString(string $json, ?string $definition): bool
+    public function validateString(string $json, ?string $definition = null): bool
     {
         $obj = json_decode($json);
         if ($obj === null) {
-            throw new Exception('Invalid JSON string');
+            throw new JsonDecodeException;
         }
 
         $this->getValidator($definition)->validate($obj, $this->getSchemaObject($definition));
