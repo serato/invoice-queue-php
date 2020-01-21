@@ -46,10 +46,11 @@
             "type": "array",
             "items": {
                 "$ref": "#/definitions/line_item"
-            }
+            },
+            "minItems": 1
         }
     },
-    "required": ["invoice_id", "invoice_date", "transaction_reference", "moneyworks_debtor_code", "currency", "gross_amount", "billing_address", "items"],
+    "required": ["source", "invoice_id", "invoice_date", "transaction_reference", "moneyworks_debtor_code", "currency", "gross_amount", "billing_address", "items"],
 
     "definitions": {
         "billing_address": {
