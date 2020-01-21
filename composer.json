@@ -1,0 +1,26 @@
+{
+    "name": "serato/sendgrid",
+    "homepage": "https://github.com/serato/serato-sendgrid",
+    "description": "A library for sending transactional emails using SendGrid",
+    "type": "library",
+    "require": {
+        "php" : ">=7.1",
+		"aws/aws-sdk-php": "^3.0.0",
+		"justinrainbow/json-schema": "^5.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "phpstan/phpstan-phpunit": "^0.11.0",
+        "squizlabs/php_codesniffer": "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Serato\\InvoiceQueue\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Serato\\InvoiceQueue\\Test\\": "tests/"
+        }
+    }
+}

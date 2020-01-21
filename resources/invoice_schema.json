@@ -1,0 +1,144 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "source": {
+            "type": "string",
+            "description": "The online ordering system which created the invoice. 'SwsEc' when SWS Ecommerce Service, 'Magen' when Magento.",
+            "enum": ["SwsEc", "Magen"]
+        },
+        "invoice_id": {
+            "type": "string",
+            "description": "Unique identifier for invoice."
+        },
+        "invoice_date": {
+            "type": "string",
+            "description": "Date of invoice creation in ISO8601 format.",
+            "format": "date-time"
+        },
+        "transaction_reference": {
+            "type": "string",
+            "description": "A reference for the transaction associated with the invoice."
+        },
+        "moneyworks_debtor_code": {
+            "type": "string",
+            "description": "Moneyworks debtor code.",
+            "enum": ["WEBC001", "WEBC004", "WEBC003"]
+        },
+        "subscription_id": {
+            "type": "string",
+            "description": "ID of the subscription to which the invoice is related. Optional."
+        },
+        "currency": {
+            "type": "string",
+            "description": "Currency of invoice amounts.",
+            "enum": ["USD", "EUR", "NZD"]
+        },
+        "gross_amount": {
+            "type": "integer",
+            "description": "Gross amount of the invoice, expressed in cents.",
+            "minimum": 0
+        },
+        "billing_address": {
+            "$ref": "#/definitions/billing_address"
+        },
+        "items": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/line_item"
+            }
+        }
+    },
+    "required": ["invoice_id", "invoice_date", "transaction_reference", "moneyworks_debtor_code", "currency", "gross_amount", "billing_address", "items"],
+
+    "definitions": {
+        "billing_address": {
+            "type": "object",
+            "properties": {
+                "company_name": {
+                    "type": "string",
+                    "description": "Company name. Optional, but one of `company_name` or `person_name` must be provided."
+                },
+                "person_name": {
+                    "type": "string",
+                    "description": "Full name of person. Optional, but one of `company_name` or `person_name` must be provided.",
+                    "example": "'John', 'John Smith', 'Mr Smith', 'Mr John Smith'."
+                },
+                "address_1": {
+                    "type": "string",
+                    "description": "Address line 1."
+                },
+                "address_2": {
+                    "type": "string",
+                    "description": "Address line 2."
+                },
+                "address_3": {
+                    "type": "string",
+                    "description": "Address line 3."
+                },
+                "city": {
+                    "type": "string",
+                    "description": "City."
+                },
+                "region": {
+                    "type": "string",
+                    "description": "Full name of state/province/region. Optional."
+                },
+                "post_code": {
+                    "type": "string",
+                    "description": "Post code."
+                },
+                "country_iso": {
+                    "type": "string",
+                    "description": "2-letter ISO country code.",
+                    "minLength": 2,
+                    "maxLength": 2,
+                    "example": "NZ"
+                }
+            },
+            "required": ["address_1", "city", "country_iso"]
+        },
+
+        "line_item": {
+            "type": "object",
+            "properties": {
+                "sku": {
+                    "type": "string",
+                    "description": "SKU code of line item."
+                },
+                "quantity": {
+                    "type": "integer",
+                    "description": "Quantity of unit items.",
+                    "minimum": 1
+                },
+                "amount_gross": {
+                    "type": "integer",
+                    "description": "Gross amount of the line item ((unit price + unit tax) * quantity), expressed in cents.",
+                    "minimum": 0
+                },
+                "amount_tax": {
+                    "type": "integer",
+                    "description": "Tax amount of the line item (unit tax * quantity), expressed in cents.",
+                    "minimum": 0
+                },
+                "amount_net": {
+                    "type": "integer",
+                    "description": "Net amount of the line item (unit price * quantity), expressed in cents.",
+                    "minimum": 0
+
+                },
+                "unit_price": {
+                    "type": "integer",
+                    "description": "Unit price of the line item, expressed in cents.",
+                    "minimum": 0
+                },
+                "tax_code": {
+                    "type": "string",
+                    "description": "Tax code for line item. 'V' when any rate of tax is added, 'Z' when no tax is added.",
+                    "enum": ["V", "Z"]
+                }
+            },
+            "required": ["sku", "quantity", "amount_gross", "amount_tax", "amount_net", "unit_price", "tax_code"]
+        }
+    }
+}
