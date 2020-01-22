@@ -60,23 +60,24 @@ class Invoice
 
     # Note: this is only public so that we use it in unit tests :-)
     public const DATA_KEYS = [
-        'source',
-        'invoice_id',
-        'invoice_date',
-        'transaction_reference',
-        'moneyworks_debtor_code',
-        'subscription_id',
-        'currency',
-        'gross_amount',
-        'billing_address_company_name',
-        'billing_address_person_name',
-        'billing_address_1',
-        'billing_address_2',
-        'billing_address_3',
-        'billing_address_city',
-        'billing_address_region',
-        'billing_address_post_code',
-        'billing_address_country_iso'
+        # Property name                    Data type
+        'source'                        => 'string',
+        'invoice_id'                    => 'string',
+        'invoice_date'                  => 'string',
+        'transaction_reference'         => 'string',
+        'moneyworks_debtor_code'        => 'string',
+        'subscription_id'               => 'string',
+        'currency'                      => 'string',
+        'gross_amount'                  => 'integer',
+        'billing_address_company_name'  => 'string',
+        'billing_address_person_name'   => 'string',
+        'billing_address_1'             => 'string',
+        'billing_address_2'             => 'string',
+        'billing_address_3'             => 'string',
+        'billing_address_city'          => 'string',
+        'billing_address_region'        => 'string',
+        'billing_address_post_code'     => 'string',
+        'billing_address_country_iso'   => 'string'
     ];
 
     /**
@@ -147,27 +148,18 @@ class Invoice
         $isBillingAddressProp = false;
 
         $dataPropName = $this->getDataPropertyName(ltrim($methodName, 'set'), 'set');
+        $dataType = self::DATA_KEYS[$dataPropName];
+
         if (strpos($dataPropName, 'billing_address_') === 0) {
             $dataPropName = $this->getBillingAddressDataPropertyName($dataPropName);
             $isBillingAddressProp = true;
         }
 
-        # Type check $val
-        # `gross_amount` should be int, everything else should be a string
-        if ($dataPropName === 'gross_amount') {
-            if (gettype($val) !== 'integer') {
-                throw new TypeError(
-                    'Invalid type for `' . __CLASS__ . '::' . $methodName . '`, argument 0. Expects integer, ' .
-                    gettype($val) . ' found.'
-                );
-            }
-        } else {
-            if (gettype($val) !== 'string') {
-                throw new TypeError(
-                    'Invalid type for `' . __CLASS__ . '::' . $methodName . '`, argument 0. Expects string, ' .
-                    gettype($val) . ' found.'
-                );
-            }
+        if (gettype($val) !== $dataType) {
+            throw new TypeError(
+                'Invalid type for `' . __CLASS__ . '::' . $methodName . '`, argument 0. Expects ' . $dataType .
+                ', ' . gettype($val) . ' found.'
+            );
         }
 
         if ($isBillingAddressProp) {
@@ -201,7 +193,7 @@ class Invoice
             throw new Exception;
         }
         $dataPropertyName = ltrim($dataPropertyName, '_');
-        if (!in_array($dataPropertyName, self::DATA_KEYS)) {
+        if (!isset(self::DATA_KEYS[$dataPropertyName])) {
             throw new InvalidMethodNameError(
                 'Invalid method name `' . __CLASS__ . '::' . $methodPrefix . $methodName . '`.'
             );

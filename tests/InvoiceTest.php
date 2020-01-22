@@ -12,14 +12,15 @@ class InvoiceTest extends AbstractTestCase
      * Tests the magic get and set methods
      *
      * @param string $propName
+     * @param string $dataType
      * @return void
      *
      * @dataProvider invoiceDataPropsProvider
      */
-    public function testMagicGetSetMethods(string $propName)
+    public function testMagicGetSetMethods(string $propName, string $dataType)
     {
         $val = 'StringVal';
-        if ($propName === 'gross_amount') {
+        if ($dataType === 'integer') {
             $val = 0;
         }
         $baseMethodName = str_replace(' ', '', ucwords(str_replace('_', ' ', $propName)));
@@ -34,11 +35,21 @@ class InvoiceTest extends AbstractTestCase
     public function invoiceDataPropsProvider(): array
     {
         $data = [];
-        foreach (Invoice::DATA_KEYS as $key) {
-            $data[] = [$key];
+        foreach (Invoice::DATA_KEYS as $key => $dataType) {
+            $data[] = [$key, $dataType];
         }
         return $data;
     }
+
+    /**
+     * @expectedException \Serato\InvoiceQueue\Error\InvalidMethodNameError
+     */
+    public function testInvalidMethodName()
+    {
+        $invoice = new Invoice;
+        $invoice->noSuchMethod();
+    }
+
 
     /**
      * @expectedException \Serato\InvoiceQueue\Error\InvalidMethodNameError
