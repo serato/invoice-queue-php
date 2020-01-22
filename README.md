@@ -1,4 +1,4 @@
-# Invoice Queue PHP
+# Invoice Queue PHP SDK
 
 A PHP library for interacting with an SQS message queue that holds invoice data.
 
