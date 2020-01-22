@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Serato\InvoiceQueue;
 
+use Serato\InvoiceQueue\InvoiceValidator;
 use Serato\InvoiceQueue\Error\InvalidMethodNameError;
+use Serato\InvoiceQueue\Exception\ValidationException;
 use ArgumentCountError;
 use TypeError;
 use DateTime;
@@ -12,7 +14,15 @@ use Exception;
 /**
  * ** Invoice **
  *
- * A model for holding invoice data.
+ * A model for working with invoice data.
+ *
+ * Data is added to, and retrieved from an instance via `set` and `get methods along
+ * with the self::addItem method.
+ *
+ * An array of complete invoice data can be returned via the self::getData method.
+ * This array conforms to the JSON schema used by Serato\InvoiceQueue\InvoiceValidator.
+ *
+ * Similarly, the model can populated from an array using the self::setData method.
  *
  * @method string getSource()
  * @method string getInvoiceId()
@@ -81,6 +91,72 @@ class Invoice
     ];
 
     /**
+     * Returns an array structure containing complete invoice data.
+     *
+     * The array structure conforms to the JSON schema used by Serato\InvoiceQueue\InvoiceValidator.
+     *
+     * @return array
+     */
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    /**
+     * Populates the instance from an array.
+     *
+     * @param array $data
+     * @param InvoiceValidator $validator
+     * @return self
+     * @throws ValidationException
+     */
+    public function setData(array $data, InvoiceValidator $validator): self
+    {
+        if ($validator->validateArray($data)) {
+            $this->data = $data;
+        } else {
+            throw new ValidationException($validator->getErrors());
+        }
+        return $this;
+    }
+
+    /**
+     * Adds a line item to the invoice
+     *
+     * @param string    $sku            SKU code of line item.
+     * @param integer   $quantity       Quantity of unit items.
+     * @param integer   $amountGross    Gross amount of the line item ((unit price + unit tax) * quantity),
+     *                                  expressed in cents.
+     * @param integer   $amountTax      Tax amount of the line item (unit tax * quantity), expressed in cents.
+     * @param integer   $amountNet      Net amount of the line item (unit price * quantity), expressed in cents.
+     * @param integer   $unitPrice      Unit price of the line item, expressed in cents.
+     * @param string    $taxCode        Tax code for line item. 'V' when any rate of tax is added, 'Z' when no
+     *                                  tax is added.
+     * @return self
+     */
+    public function addItem(
+        string $sku,
+        int $quantity,
+        int $amountGross,
+        int $amountTax,
+        int $amountNet,
+        int $unitPrice,
+        string $taxCode
+    ): self {
+        $item = [
+            'sku' => $sku,
+            'quantity' => $quantity,
+            'amount_gross' => $amountGross,
+            'amount_tax' => $amountTax,
+            'amount_net' => $amountNet,
+            'unit_price' => $unitPrice,
+            'tax_code' => $taxCode
+        ];
+        $this->data['items'][] = $item;
+        return $this;
+    }
+
+    /**
      * @throws InvalidMethodNameError
      */
     public function __call(string $methodName, array $args)
@@ -108,13 +184,14 @@ class Invoice
      */
     private function callGetMethod(string $methodName, array $args)
     {
+        $dataPropName = $this->getDataPropertyName(ltrim($methodName, 'get'), 'get');
+
         if (count($args) > 0) {
             throw new ArgumentCountError(
                 '`' . __CLASS__ . '::' . $methodName . '` expects 0 arguments. ' . count($args) . ' found.'
             );
         }
 
-        $dataPropName = $this->getDataPropertyName(ltrim($methodName, 'get'), 'get');
         if (strpos($dataPropName, 'billing_address_') === 0) {
             $dataPropName = $this->getBillingAddressDataPropertyName($dataPropName);
             return isset($this->data['billing_address'][$dataPropName]) ?
@@ -138,6 +215,8 @@ class Invoice
      */
     private function callSetMethod(string $methodName, array $args): self
     {
+        $dataPropName = $this->getDataPropertyName(ltrim($methodName, 'set'), 'set');
+
         if (count($args) !== 1) {
             throw new ArgumentCountError(
                 '`' . __CLASS__ . '::' . $methodName . '` expects 1 argument. ' . count($args) . ' found.'
@@ -147,7 +226,6 @@ class Invoice
         $val = $args[0];
         $isBillingAddressProp = false;
 
-        $dataPropName = $this->getDataPropertyName(ltrim($methodName, 'set'), 'set');
         $dataType = self::DATA_KEYS[$dataPropName];
 
         if (strpos($dataPropName, 'billing_address_') === 0) {

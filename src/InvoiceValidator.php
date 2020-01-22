@@ -85,7 +85,7 @@ class InvoiceValidator
      * @param string|null $definition
      * @return array
      */
-    public function getErrors(?string $definition): array
+    public function getErrors(?string $definition = null): array
     {
         return $this->getValidator($definition)->getErrors();
     }

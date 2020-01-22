@@ -5,120 +5,139 @@ namespace Serato\InvoiceQueue\Test;
 
 use Serato\InvoiceQueue\Test\AbstractTestCase;
 use Serato\InvoiceQueue\Invoice;
+use Serato\InvoiceQueue\InvoiceValidator;
 
 class InvoiceTest extends AbstractTestCase
 {
     /**
-     * Tests the magic get and set methods
+     * Tests the setData method with valid data
      *
-     * @param string $propName
-     * @param string $dataType
      * @return void
+     */
+    public function testSetDataWithValidData()
+    {
+        $validator = new InvoiceValidator;
+        $invoice = new Invoice;
+        $invoice->setData($this->getValidInvoiceData(), $validator);
+        $this->assertEquals($this->getValidInvoiceData(), $invoice->getData());
+    }
+
+    /**
+     * Tests the setData method with invalid data
      *
-     * @dataProvider invoiceDataPropsProvider
+     * @return void
+     * @expectedException \Serato\InvoiceQueue\Exception\ValidationException
      */
-    public function testMagicGetSetMethods(string $propName, string $dataType)
+    public function testSetDataWithInvalidData()
     {
-        $val = 'StringVal';
-        if ($dataType === 'integer') {
-            $val = 0;
-        }
-        $baseMethodName = str_replace(' ', '', ucwords(str_replace('_', ' ', $propName)));
-        $setMethodName = 'set' . $baseMethodName;
-        $getMethodName = 'get' . $baseMethodName;
-
+        $validator = new InvoiceValidator;
         $invoice = new Invoice;
-        $invoice->$setMethodName($val);
-        $this->assertEquals($val, $invoice->$getMethodName());
-    }
-
-    public function invoiceDataPropsProvider(): array
-    {
-        $data = [];
-        foreach (Invoice::DATA_KEYS as $key => $dataType) {
-            $data[] = [$key, $dataType];
-        }
-        return $data;
+        $invoice->setData($this->getInvalidInvoiceData(), $validator);
     }
 
     /**
-     * @expectedException \Serato\InvoiceQueue\Error\InvalidMethodNameError
-     */
-    public function testInvalidMethodName()
-    {
-        $invoice = new Invoice;
-        $invoice->noSuchMethod();
-    }
-
-
-    /**
-     * @expectedException \Serato\InvoiceQueue\Error\InvalidMethodNameError
-     */
-    public function testInvalidGetMethodName()
-    {
-        $invoice = new Invoice;
-        $invoice->getNoSuchMethod();
-    }
-
-    /**
-     * @expectedException \Serato\InvoiceQueue\Error\InvalidMethodNameError
-     */
-    public function testInvalidSetMethodName()
-    {
-        $invoice = new Invoice;
-        $invoice->setNoSuchMethod('val');
-    }
-
-    /**
-     * Provide an argument to set method (set methods expect 0 args)
+     * Tests the setItem
      *
-     * @expectedException \ArgumentCountError
+     * @return void
      */
-    public function testInvalidGetMethodArgs()
+    public function testSetItemMethod()
     {
+        $item = [
+            'sku' => 'SKU1',
+            'quantity' => 1,
+            'amount_gross' => 0,
+            'amount_tax' => 0,
+            'amount_net' => 0,
+            'unit_price' => 0,
+            'tax_code' => 'V'
+        ];
+
         $invoice = new Invoice;
-        $invoice->getSource('val');
+
+        $invoice->addItem(
+            $item['sku'],
+            $item['quantity'],
+            $item['amount_gross'],
+            $item['amount_tax'],
+            $item['amount_net'],
+            $item['unit_price'],
+            $item['tax_code']
+        );
+
+        $data = $invoice->getData();
+
+        $this->assertEquals($item, $data['items'][0]);
     }
 
-    /**
-     * Provide no arguments to get method (get methods expect 1 arg)
-     *
-     * @expectedException \ArgumentCountError
-     */
-    public function testInvalidSetMethodArgs1()
+    private function getValidInvoiceData()
     {
-        $invoice = new Invoice;
-        $invoice->setSource();
+        return  [
+            'source' => 'SwsEc',
+            'invoice_id' => 'A STRING VAL',
+            'invoice_date' => '2020-01-21T08:54:09Z',
+            'transaction_reference' => 'A STRING VAL',
+            'moneyworks_debtor_code' => 'WEBC001',
+            'subscription_id' => 'A STRING VAL',
+            'currency' => 'USD',
+            'gross_amount' => 0,
+            'billing_address' => [
+                'company_name' => 'Company Inc',
+                'person_name' => 'Jo Bloggs',
+                'address_1' => '123 Street Road',
+                'address_2' => 'Suburbia',
+                'address_3' => 'The Stixx',
+                'city' => 'Townsville',
+                'region' => 'Statey',
+                'post_code' => '90210',
+                'country_iso' => 'NZ'
+            ],
+            'items' => [
+                [
+                    'sku' => 'SKU1',
+                    'quantity' => 1,
+                    'amount_gross' => 0,
+                    'amount_tax' => 0,
+                    'amount_net' => 0,
+                    'unit_price' => 0,
+                    'tax_code' => 'V'
+                ]
+            ]
+        ];
     }
 
-    /**
-     * Provide 2 arguments to get method (get methods expect 1 arg)
-     *
-     * @expectedException \ArgumentCountError
-     */
-    public function testInvalidSetMethodArgs2()
+    private function getInvalidInvoiceData()
     {
-        $invoice = new Invoice;
-        $invoice->setSource('val', 'val');
-    }
-
-    /**
-     * Pass an argument of incorrect type to set method
-     *
-     * @expectedException \TypeError
-     */
-    public function testInvalidSetMethodArgType()
-    {
-        $invoice = new Invoice;
-        $invoice->setSource(0);
-    }
-
-    /**
-     * Test that getting an unset value returns NULL.
-     */
-    public function testGetMethodNullDefaultValue()
-    {
-        $invoice = new Invoice;
-        $this->assertEquals(null, $invoice->getSource());
+        return  [
+            # 'source' => 'SwsEc', # Missing required field
+            'invoice_id' => 'A STRING VAL',
+            'invoice_date' => '2020-01-21T08:54:09Z',
+            'transaction_reference' => 'A STRING VAL',
+            'moneyworks_debtor_code' => 'WEBC001',
+            'subscription_id' => 'A STRING VAL',
+            'currency' => 'USD',
+            'gross_amount' => '0', # Wrong data type
+            'billing_address' => [
+                'company_name' => 'Company Inc',
+                'person_name' => 'Jo Bloggs',
+                'address_1' => '123 Street Road',
+                'address_2' => 'Suburbia',
+                'address_3' => 'The Stixx',
+                'city' => 'Townsville',
+                'region' => 'Statey',
+                'post_code' => '90210',
+                'country_iso' => 'NZ'
+            ],
+            'items' => [
+                [
+                    # 'sku' => 'SKU1', # Missing required field
+                    'quantity' => 1,
+                    'amount_gross' => 0,
+                    'amount_tax' => 0,
+                    'amount_net' => 0,
+                    'unit_price' => 0,
+                    'tax_code' => 'V'
+                ]
+            ]
+        ];
     }
 }
