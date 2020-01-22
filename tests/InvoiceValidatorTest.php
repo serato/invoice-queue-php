@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Serato\InvoiceQueue\Test;
 
 use Serato\InvoiceQueue\Test\AbstractTestCase;
-use Serato\InvoiceQueue\MessageValidator;
+use Serato\InvoiceQueue\InvoiceValidator;
 
-class MessageValidatorTest extends AbstractTestCase
+class InvoiceValidatorTest extends AbstractTestCase
 {
     /**
-     * Tests the `Serato\InvoiceQueue\MessageValidator::validateArray` method
+     * Tests the `Serato\InvoiceQueue\InvoiceValidator::validateArray` method
      *
      * @param string|null $ref
      * @param boolean $isValid
@@ -20,7 +20,7 @@ class MessageValidatorTest extends AbstractTestCase
      */
     public function testValidate(?string $ref, bool $isValid, array $data)
     {
-        $validator = new MessageValidator;
+        $validator = new InvoiceValidator;
         $bVal = $validator->validateArray($data, $ref);
         # print_r($validator->getErrors($ref));
         $this->assertEquals($isValid, $bVal);
@@ -50,7 +50,7 @@ class MessageValidatorTest extends AbstractTestCase
      */
     public function testInvalidJsonString()
     {
-        $validator = new MessageValidator;
+        $validator = new InvoiceValidator;
         $validator->validateString('');
     }
 
@@ -60,7 +60,7 @@ class MessageValidatorTest extends AbstractTestCase
     public function testFailedJsonEncode()
     {
         $fp = fopen(__DIR__ . '/resources/schema_validation_data/line_item.php', 'r');
-        $validator = new MessageValidator;
+        $validator = new InvoiceValidator;
         $validator->validateArray(['fp' => $fp]);
     }
 }

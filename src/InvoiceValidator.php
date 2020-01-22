@@ -11,11 +11,11 @@ use Serato\InvoiceQueue\Exception\JsonDecodeException;
 use Exception;
 
 /**
- * ** Message Validator **
+ * ** Invoice Validator **
  *
- * Functionality for validating message payloads against a JSON schema.
+ * Functionality for validating invoice data against a JSON schema.
  */
-class MessageValidator
+class InvoiceValidator
 {
     /** @var string */
     private $schemaFilePath;
