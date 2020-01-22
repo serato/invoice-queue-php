@@ -1,5 +1,5 @@
 {
-    "name": "serato/sendgrid",
+    "name": "serato/invoice-queue",
     "homepage": "https://github.com/serato/serato-sendgrid",
     "description": "A library for sending transactional emails using SendGrid",
     "type": "library",
