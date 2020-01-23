@@ -22,7 +22,7 @@ use Exception;
  * An array of complete invoice data can be returned via the self::getData method.
  * This array conforms to the JSON schema used by Serato\InvoiceQueue\InvoiceValidator.
  *
- * Similarly, the model can populated from an array using the self::setData method.
+ * The model can populated from an array using the Invoice::load static method.
  *
  * @method string getSource()
  * @method string getInvoiceId()
@@ -68,6 +68,35 @@ class Invoice
         'items' => []
     ];
 
+    /**
+     * Constructs the object.
+     *
+     * Optionally takes a array of data, $data, and InvoiceValidator instance with which to populate
+     * the object.
+     *
+     * If $data is provided an InvoiceValidator instance must also be provided.
+     *
+     * @param array|null $data
+     * @param InvoiceValidator|null $validator
+     * @throws ValidationException
+     * @throws ArgumentCountError
+     */
+    public function __construct(?array $data = null, ?InvoiceValidator $validator = null)
+    {
+        if ($data !== null) {
+            if ($validator === null) {
+                throw new ArgumentCountError(
+                    'You must provide a InvoiceValidator instance when setting the data argument'
+                );
+            }
+            if ($validator->validateArray($data)) {
+                $this->data = $data;
+            } else {
+                throw new ValidationException($validator->getErrors());
+            }
+        }
+    }
+
     # Note: this is only public so that we use it in unit tests :-)
     public const DATA_KEYS = [
         # Property name                    Data type
@@ -103,21 +132,15 @@ class Invoice
     }
 
     /**
-     * Populates the instance from an array.
+     * Creates an instance from an array.
      *
      * @param array $data
      * @param InvoiceValidator $validator
      * @return self
-     * @throws ValidationException
      */
-    public function setData(array $data, InvoiceValidator $validator): self
+    public static function load(array $data, InvoiceValidator $validator): self
     {
-        if ($validator->validateArray($data)) {
-            $this->data = $data;
-        } else {
-            throw new ValidationException($validator->getErrors());
-        }
-        return $this;
+        return new self($data, $validator);
     }
 
     /**
