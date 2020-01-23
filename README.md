@@ -123,13 +123,15 @@ $invoice->addItem('MySkuCode', 2, 2000, 0, 2000, 1000, 'Z');
 # Get complete invoice data that conforms to JSON schema
 $data = $invoice->getData();
 
-# Use `Invoice::setData` to populate model with data (the data will be validated against the JSON schema)
+# Use `Invoice::setData` to populate model with data (the data will be
+# validated against the JSON schema)
 $invoice = new Invoice;
 $invoice->setData($data);
 
-# `Invoice::setData` can optionally take a `Serato\InvoiceQueue\InvoiceValidator` instance
-# This can provide better performance if creating multiple Invoice instances because is saves on the overhead
-# of having to create multiple InvoiceValidator instances.
+# `Invoice::setData` can optionally take a `Serato\InvoiceQueue\InvoiceValidator`
+# instance. This can provide better performance if creating multiple Invoice
+# instances because is saves on the overhead of having to create multiple
+# InvoiceValidator instances.
 $validator = new Serato\InvoiceQueue\InvoiceValidator;
 $invoice1 = new Invoice;
 $invoice1->setData($data1, $validator);
@@ -153,20 +155,24 @@ use Serato\InvoiceQueue\SqsQueue;
 $awsSdk = new Sdk();
 $awsSqsClient->createSqs();
 
-# Constructor requires an AWS SQS client and an environment string (one of 'test' or 'production')
+# Constructor requires an AWS SQS client and an environment string
+# (one of 'test' or 'production')
 $queue = new SqsQueue($awsSqsClient, 'test');
 
 # Get the queue name or URL of the underlying SQS queue
 $queue->getQueueUrl();
 $queue->getQueueName();
 
-# Send an individual Invoice instance to the queue (Invoice data will be validated against the JSON schema)
+# Send an individual Invoice instance to the queue
+# Invoice data will be validated against the JSON schema
 $invoice = new Invoice;
 $invoice->setData(['my' => 'data']);
 $messageId = $queue->sendInvoice($invoice);
 
-# Send multiple invoices as a batch (Invoice data will be validated against the JSON schema)
-# Batch will sent when interal batch size limit is reached or when SqsQueue instance is destroyed
+# Send multiple invoices as a batch
+# Invoice data will be validated against the JSON schema
+# Batch will sent when interal batch size limit is reached or when
+# SqsQueue instance is destroyed
 $invoice1 = new Invoice;
 $invoice1->setData(['my' => 'data1']);
 $invoice2 = new Invoice;
