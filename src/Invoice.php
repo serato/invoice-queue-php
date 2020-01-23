@@ -140,7 +140,7 @@ class Invoice
      */
     public static function load(array $data, InvoiceValidator $validator): self
     {
-        return new self($data, $validator);
+        return new static($data, $validator);
     }
 
     /**
