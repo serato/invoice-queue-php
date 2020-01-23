@@ -59,7 +59,7 @@ The `Serato\InvoiceQueue\InvoiceValidator` class can validate a string or array 
 
 The `InvoiceValidator::validateString` and `InvoiceValidator::validateArray` methods return a boolean value
 indicating the success or otherwise of the validation. Use the The `InvoiceValidator::getErrors` method to
-iteract over an array of specific validation errors.
+iterate over an array of validation errors.
 
 The `InvoiceValidator::validateString` and `InvoiceValidator::validateArray` methods can optionally take a
 `$defintion` parameter which will validate the input against an named definition with the JSON schema document.
