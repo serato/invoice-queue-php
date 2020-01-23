@@ -51,7 +51,7 @@ class InvoiceValidatorTest extends AbstractTestCase
     public function testInvalidJsonString()
     {
         $validator = new InvoiceValidator;
-        $validator->validateString('');
+        $validator->validateJsonString('');
     }
 
     /**

@@ -57,11 +57,11 @@ $ php vendor/bin/phpunit
 The `Serato\InvoiceQueue\InvoiceValidator` class can validate a string or array against a
 [JSON schema](./resources/invoice_schema.json) representing valid invoice data.
 
-The `InvoiceValidator::validateString` and `InvoiceValidator::validateArray` methods return a boolean value
+The `InvoiceValidator::validateJsonString` and `InvoiceValidator::validateArray` methods return a boolean value
 indicating the success or otherwise of the validation. Use the The `InvoiceValidator::getErrors` method to
 iterate over an array of validation errors.
 
-The `InvoiceValidator::validateString` and `InvoiceValidator::validateArray` methods can optionally take a
+The `InvoiceValidator::validateJsonString` and `InvoiceValidator::validateArray` methods can optionally take a
 `$defintion` parameter which will validate the input against an named definition with the JSON schema document.
 If not provided, the input is validated against the root element of the JSON schema.
 
@@ -83,7 +83,7 @@ if ($validator->validateArray(['my' => 'data'])) {
 
 # Validate a string against an named definition within the JSON schema
 
-if ($validator->validateString('{"my":"data"}', 'line_item')) {
+if ($validator->validateJsonString('{"my":"data"}', 'line_item')) {
   // Data conforms to schema
 } else {
   // Data does not conform to schema

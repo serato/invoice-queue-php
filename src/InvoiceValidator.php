@@ -48,7 +48,7 @@ class InvoiceValidator
      */
     public function validateArray(array $data, ?string $definition = null): bool
     {
-        # It might seem silly to call json_encode() here and json_decode() in self::validateString
+        # It might seem silly to call json_encode() here and json_decode() in self::validateJsonString
         # But this is the simplest way to ensure that we correctly transpose array hashes into stdclass
         # objects that the JSON schema validator requires.
         $json = json_encode($data);
@@ -56,7 +56,7 @@ class InvoiceValidator
             throw new JsonEncodeException;
         }
         
-        return $this->validateString($json, $definition);
+        return $this->validateJsonString($json, $definition);
     }
 
     /**
@@ -68,7 +68,7 @@ class InvoiceValidator
      *
      * @throws JsonDecodeException
      */
-    public function validateString(string $json, ?string $definition = null): bool
+    public function validateJsonString(string $json, ?string $definition = null): bool
     {
         $obj = json_decode($json);
         if ($obj === null) {
