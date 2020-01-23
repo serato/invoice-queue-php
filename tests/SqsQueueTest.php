@@ -127,6 +127,96 @@ class SqsQueueTest extends AbstractTestCase
         return [[null], [new InvoiceValidator]];
     }
 
+    /**
+     * Tests the SqsQueue::sendToBatch method with a single invoice and that the batch
+     * is successfully sent when SqsQueue method is destructed.
+     */
+    public function testSendInvoiceToBatchSuccessfulSendViaDestructor()
+    {
+        $validator = new InvoiceValidator;
+        $invoice = new Invoice;
+        $invoice->setData($this->getValidInvoiceData(), $validator);
+
+        $results = [
+            # Result for GetQueueUrl command
+            new Result(['QueueUrl'  => 'my-queue-url']),
+            # Result for SendMessageBatch command
+            new Result([])
+        ];
+
+        $sqsQueue = new SqsQueue($this->getMockedAwsSdk($results)->createSqs(['version' => '2012-11-05']), 'test');
+
+        $sqsQueue->sendInvoiceToBatch($invoice, $validator);
+        # Destroy the object. This should trigger the batch send.
+        unset($sqsQueue);
+
+        # Confirm the stack is empty (ie. that the API calls HAVE been made)
+        $this->assertEquals(0, $this->getAwsMockHandlerStackCount());
+    }
+
+    /**
+     * Tests the SqsQueue::sendToBatch method with a single invoice and that the batch
+     * is unsuccessfully sent when SqsQueue method is destructed.
+     *
+     * @expectedException \Serato\InvoiceQueue\Exception\QueueSendException
+     */
+    public function testSendInvoiceToBatchUnsuccessfulSendViaDestructor()
+    {
+        $validator = new InvoiceValidator;
+        $invoice = new Invoice;
+        $invoice->setData($this->getValidInvoiceData(), $validator);
+
+        $sqsClient = $this->getMockedAwsSdk()->createSqs(['version' => '2012-11-05']);
+        $cmd = $sqsClient->getCommand('SendMessage', [
+            'QueueName' => 'my-queue-name'
+        ]);
+
+        $results = [
+            # Result for GetQueueUrl command
+            new Result(['QueueUrl'  => 'my-queue-url']),
+            # Result for SendMessage command
+            new AwsException('Exception message', $cmd)
+        ];
+
+        $sqsQueue = new SqsQueue($this->getMockedAwsSdk($results)->createSqs(['version' => '2012-11-05']), 'test');
+
+        $sqsQueue->sendInvoiceToBatch($invoice, $validator);
+        # Destroy the object. This should trigger the batch send.
+        unset($sqsQueue);
+    }
+
+    /**
+     * Tests the SqsQueue::sendToBatch method triggers a batch send when the internal batch size
+     * reaches the defined send threshold.
+     */
+    public function testSendInvoiceToBatchSuccessfulSendViaSendThreshold()
+    {
+        $validator = new InvoiceValidator;
+        $invoice = new Invoice;
+        $invoice->setData($this->getValidInvoiceData(), $validator);
+
+        $results = [
+            # Result for GetQueueUrl command
+            new Result(['QueueUrl'  => 'my-queue-url']),
+            # Result for SendMessageBatch command for first batch of 10
+            new Result([]),
+            # Result for SendMessageBatch command for the final batch of 1
+            new Result([])
+        ];
+
+        $sqsQueue = new SqsQueue($this->getMockedAwsSdk($results)->createSqs(['version' => '2012-11-05']), 'test');
+
+        for ($i = 0; $i < (SqsQueue::SEND_BATCH_SIZE + 1); $i++) {
+            $sqsQueue->sendInvoiceToBatch($invoice, $validator);
+        }
+        
+        # Destroy the object. This should trigger the final batch send.
+        unset($sqsQueue);
+
+        # Confirm the stack is empty (ie. that the API calls HAVE been made)
+        $this->assertEquals(0, $this->getAwsMockHandlerStackCount());
+    }
+
     private function getValidInvoiceData()
     {
         return  [
@@ -162,40 +252,4 @@ class SqsQueueTest extends AbstractTestCase
             ]
         ];
     }
-
-    // private function getInvalidInvoiceData()
-    // {
-    //     return  [
-    //         # 'source' => 'SwsEc', # Missing required field
-    //         'invoice_id' => 'A STRING VAL',
-    //         'invoice_date' => '2020-01-21T08:54:09Z',
-    //         'transaction_reference' => 'A STRING VAL',
-    //         'moneyworks_debtor_code' => 'WEBC001',
-    //         'subscription_id' => 'A STRING VAL',
-    //         'currency' => 'USD',
-    //         'gross_amount' => '0', # Wrong data type
-    //         'billing_address' => [
-    //             'company_name' => 'Company Inc',
-    //             'person_name' => 'Jo Bloggs',
-    //             'address_1' => '123 Street Road',
-    //             'address_2' => 'Suburbia',
-    //             'address_3' => 'The Stixx',
-    //             'city' => 'Townsville',
-    //             'region' => 'Statey',
-    //             'post_code' => '90210',
-    //             'country_iso' => 'NZ'
-    //         ],
-    //         'items' => [
-    //             [
-    //                 # 'sku' => 'SKU1', # Missing required field
-    //                 'quantity' => 1,
-    //                 'amount_gross' => 0,
-    //                 'amount_tax' => 0,
-    //                 'amount_net' => 0,
-    //                 'unit_price' => 0,
-    //                 'tax_code' => 'V'
-    //             ]
-    //         ]
-    //     ];
-    // }
 }

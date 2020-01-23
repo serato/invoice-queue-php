@@ -18,7 +18,7 @@ use Exception;
  */
 class SqsQueue
 {
-    private const SEND_BATCH_SIZE = 10;
+    public const SEND_BATCH_SIZE = 10;
 
     /** @var SqsClient */
     private $sqsClient;
@@ -215,7 +215,7 @@ class SqsQueue
     /**
      * @return Result | null
      */
-    private function sendMessageBatch()
+    private function sendMessageBatch(): ?Result
     {
         if (count($this->messageBatch) > 0) {
             try {
@@ -229,6 +229,7 @@ class SqsQueue
                 $this->throwQueueSendException($e);
             }
         }
+        return null;
     }
     /**
      * Throws a `QueueSendException` exception in response to catching an
