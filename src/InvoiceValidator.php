@@ -11,11 +11,11 @@ use Serato\InvoiceQueue\Exception\JsonDecodeException;
 use Exception;
 
 /**
- * ** Message Validator **
+ * ** Invoice Validator **
  *
- * Functionality for validating message payloads against a JSON schema.
+ * Functionality for validating invoice data against a JSON schema.
  */
-class MessageValidator
+class InvoiceValidator
 {
     /** @var string */
     private $schemaFilePath;
@@ -48,7 +48,7 @@ class MessageValidator
      */
     public function validateArray(array $data, ?string $definition = null): bool
     {
-        # It might seem silly to call json_encode() here and json_decode() in self::validateString
+        # It might seem silly to call json_encode() here and json_decode() in self::validateJsonString
         # But this is the simplest way to ensure that we correctly transpose array hashes into stdclass
         # objects that the JSON schema validator requires.
         $json = json_encode($data);
@@ -56,7 +56,7 @@ class MessageValidator
             throw new JsonEncodeException;
         }
         
-        return $this->validateString($json, $definition);
+        return $this->validateJsonString($json, $definition);
     }
 
     /**
@@ -68,7 +68,7 @@ class MessageValidator
      *
      * @throws JsonDecodeException
      */
-    public function validateString(string $json, ?string $definition = null): bool
+    public function validateJsonString(string $json, ?string $definition = null): bool
     {
         $obj = json_decode($json);
         if ($obj === null) {
@@ -85,7 +85,7 @@ class MessageValidator
      * @param string|null $definition
      * @return array
      */
-    public function getErrors(?string $definition): array
+    public function getErrors(?string $definition = null): array
     {
         return $this->getValidator($definition)->getErrors();
     }
