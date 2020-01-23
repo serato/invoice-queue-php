@@ -84,10 +84,10 @@ class SqsQueue
      *
      * @param Invoice $invoice
      * @param InvoiceValidator $validator
-     * @return void
+     * @return self
      * @throws ValidationException
      */
-    public function sendInvoiceToBatch(Invoice $invoice, InvoiceValidator $validator): void
+    public function sendInvoiceToBatch(Invoice $invoice, InvoiceValidator $validator): self
     {
         if (!$validator->validateArray($invoice->getData())) {
             throw new ValidationException($validator->getErrors());
@@ -96,6 +96,7 @@ class SqsQueue
             $this->sendMessageBatch();
         }
         $this->messageBatch[] = $this->invoiceToSqsSendParams($invoice, (string)count($this->messageBatch));
+        return $this;
     }
 
     /**
