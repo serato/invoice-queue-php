@@ -71,20 +71,22 @@ use Serato\InvoiceQueue\InvoiceValidator;
 $validator = new Serato\InvoiceQueue\InvoiceValidator;
 
 # Validate an array against the root schema.
+
 if ($validator->validateArray(['my' => 'data'])) {
-  echo "Data conforms to schema";
+  // Data conforms to schema
 } else {
-  echo "Data does not conform to schema\n";
+  // Data does not conform to schema
   foreach ($validator->getErrors() as $error) {
     print_r($error);
   }
 }
 
 # Validate a string against an named definition within the JSON schema
+
 if ($validator->validateString('{"my":"data"}', 'line_item')) {
-  echo "Data conforms to schema";
+  // Data conforms to schema
 } else {
-  echo "Data does not conform to schema\n";
+  // Data does not conform to schema
   foreach ($validator->getErrors('line_item') as $error) {
     print_r($error);
   }
@@ -105,6 +107,7 @@ use Serato\InvoiceQueue\Invoice;
 $invoice = new Invoice;
 
 # Set individual properties
+
 $invoice
   ->setInvoiceId('MyInvoiceId')
   ->setCurrency('EUR')
@@ -112,19 +115,23 @@ $invoice
 # ...etc
 
 # Get individual properties
+
 echo $invoice->getInvoiceId();
 echo $invoice->getCurrency();
 echo $invoice->getBillingAddressCompanyName();
 # ...etc
 
 # Add a line item
+
 $invoice->addItem('MySkuCode', 2, 2000, 0, 2000, 1000, 'Z');
 
 # Get complete invoice data that conforms to JSON schema
+
 $data = $invoice->getData();
 
 # Use `Invoice::setData` to populate model with data (the data will be
 # validated against the JSON schema)
+
 $invoice = new Invoice;
 $invoice->setData($data);
 
@@ -132,6 +139,7 @@ $invoice->setData($data);
 # instance. This can provide better performance if creating multiple Invoice
 # instances because is saves on the overhead of having to create multiple
 # InvoiceValidator instances.
+
 $validator = new Serato\InvoiceQueue\InvoiceValidator;
 $invoice1 = new Invoice;
 $invoice1->setData($data1, $validator);
@@ -152,19 +160,23 @@ use Aws\Sdk;
 use Serato\InvoiceQueue\SqsQueue;
 
 # Create AWS SQS client instance
+
 $awsSdk = new Sdk();
 $awsSqsClient->createSqs();
 
 # Constructor requires an AWS SQS client and an environment string
 # (one of 'test' or 'production')
+
 $queue = new SqsQueue($awsSqsClient, 'test');
 
 # Get the queue name or URL of the underlying SQS queue
+
 $queue->getQueueUrl();
 $queue->getQueueName();
 
 # Send an individual Invoice instance to the queue
 # Invoice data will be validated against the JSON schema
+
 $invoice = new Invoice;
 $invoice->setData(['my' => 'data']);
 $messageId = $queue->sendInvoice($invoice);
@@ -173,6 +185,7 @@ $messageId = $queue->sendInvoice($invoice);
 # Invoice data will be validated against the JSON schema
 # Batch will sent when interal batch size limit is reached or when
 # SqsQueue instance is destroyed
+
 $invoice1 = new Invoice;
 $invoice1->setData(['my' => 'data1']);
 $invoice2 = new Invoice;
