@@ -9,9 +9,9 @@ To include this library in a PHP project add the following line to the project's
 
 ```json
 {
-	"require": {
-		"serato/invoice-queue": "dev-master"
-	}
+  "require": {
+    "serato/invoice-queue": "dev-master"
+  }
 }
 ```
 See [Packagist](https://packagist.org/packages/serato/invoice-queue-php) for a list of all
@@ -72,22 +72,22 @@ $validator = new Serato\InvoiceQueue\InvoiceValidator;
 
 # Validate an array against the root schema.
 if ($validator->validateArray(['my' => 'data'])) {
-	echo "Data conforms to schema";
+  echo "Data conforms to schema";
 } else {
-	echo "Data does not conform to schema\n";
-	foreach ($validator->getErrors() as $error) {
-		print_r($error);
-	}
+  echo "Data does not conform to schema\n";
+  foreach ($validator->getErrors() as $error) {
+    print_r($error);
+  }
 }
 
 # Validate a string against an named definition within the JSON schema
 if ($validator->validateString('{"my":"data"}', 'line_item')) {
-	echo "Data conforms to schema";
+  echo "Data conforms to schema";
 } else {
-	echo "Data does not conform to schema\n";
-	foreach ($validator->getErrors('line_item') as $error) {
-		print_r($error);
-	}
+  echo "Data does not conform to schema\n";
+  foreach ($validator->getErrors('line_item') as $error) {
+    print_r($error);
+  }
 }
 ```
 
@@ -106,9 +106,9 @@ $invoice = new Invoice;
 
 # Set individual properties
 $invoice
-	->setInvoiceId('MyInvoiceId')
-	->setCurrency('EUR')
-	->setBillingAddressCompanyName('Acme Inc');
+  ->setInvoiceId('MyInvoiceId')
+  ->setCurrency('EUR')
+  ->setBillingAddressCompanyName('Acme Inc');
 # ...etc
 
 # Get individual properties
@@ -173,6 +173,6 @@ $invoice2 = new Invoice;
 $invoice2->setData(['my' => 'data2']);
 
 $queue
-	->sendInvoiceToBatch($invoice1)
-	->sendInvoiceToBatch($invoice2);
+  ->sendInvoiceToBatch($invoice1)
+  ->sendInvoiceToBatch($invoice2);
 ```
