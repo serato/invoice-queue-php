@@ -30,7 +30,7 @@ class SqsQueue
     private $queueUrl;
 
     /** @var array */
-    private $messageBatch;
+    private $messageBatch = [];
 
     /**
      * Constructs the object
