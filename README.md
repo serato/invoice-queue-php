@@ -129,22 +129,12 @@ $invoice->addItem('MySkuCode', 2, 2000, 0, 2000, 1000, 'Z');
 
 $data = $invoice->getData();
 
-# Use `Invoice::setData` to populate model with data (the data will be
-# validated against the JSON schema)
-
-$invoice = new Invoice;
-$invoice->setData($data);
-
-# `Invoice::setData` can optionally take a `Serato\InvoiceQueue\InvoiceValidator`
-# instance. This can provide better performance if creating multiple Invoice
-# instances because is saves on the overhead of having to create multiple
-# InvoiceValidator instances.
+# Use the `Invoice::load` static method to populate model with data
+# (the data will be validated against the JSON schema)
 
 $validator = new Serato\InvoiceQueue\InvoiceValidator;
-$invoice1 = new Invoice;
-$invoice1->setData($data1, $validator);
-$invoice2 = new Invoice;
-$invoice2->setData($data2, $validator);
+$invoice = Invoice::load($data, $validator);
+
 ```
 
 ### Sqs Client
@@ -178,7 +168,7 @@ $queue->getQueueName();
 # Invoice data will be validated against the JSON schema
 
 $invoice = new Invoice;
-$invoice->setData(['my' => 'data']);
+// ... populate $invoice
 $messageId = $queue->sendInvoice($invoice);
 
 # Send multiple invoices as a batch
@@ -187,9 +177,9 @@ $messageId = $queue->sendInvoice($invoice);
 # SqsQueue instance is destroyed
 
 $invoice1 = new Invoice;
-$invoice1->setData(['my' => 'data1']);
+// ... populate $invoice1
 $invoice2 = new Invoice;
-$invoice2->setData(['my' => 'data2']);
+// ... populate $invoice2
 
 $queue
   ->sendInvoiceToBatch($invoice1)

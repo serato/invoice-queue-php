@@ -17,8 +17,7 @@ class InvoiceTest extends AbstractTestCase
     public function testSetDataWithValidData()
     {
         $validator = new InvoiceValidator;
-        $invoice = new Invoice;
-        $invoice->setData($this->getValidInvoiceData(), $validator);
+        $invoice = Invoice::load($this->getValidInvoiceData(), $validator);
         $this->assertEquals($this->getValidInvoiceData(), $invoice->getData());
     }
 
@@ -31,8 +30,7 @@ class InvoiceTest extends AbstractTestCase
     public function testSetDataWithInvalidData()
     {
         $validator = new InvoiceValidator;
-        $invoice = new Invoice;
-        $invoice->setData($this->getInvalidInvoiceData(), $validator);
+        $invoice = Invoice::load($this->getInvalidInvoiceData(), $validator);
     }
 
     /**

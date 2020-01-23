@@ -65,8 +65,7 @@ class SqsQueueTest extends AbstractTestCase
     {
         $messageId = '123abc456';
     
-        $invoice = new Invoice;
-        $invoice->setData($this->getValidInvoiceData(), new InvoiceValidator);
+        $invoice = Invoice::load($this->getValidInvoiceData(), new InvoiceValidator);
 
         $results = [
             # Result for GetQueueUrl command
@@ -89,8 +88,7 @@ class SqsQueueTest extends AbstractTestCase
      */
     public function testSendInvoiceValidInvoiceUnsuccessfulDelivery($validator)
     {
-        $invoice = new Invoice;
-        $invoice->setData($this->getValidInvoiceData(), new InvoiceValidator);
+        $invoice = Invoice::load($this->getValidInvoiceData(), new InvoiceValidator);
 
         $sqsClient = $this->getMockedAwsSdk()->createSqs(['version' => '2012-11-05']);
         $cmd = $sqsClient->getCommand('SendMessage', [
@@ -134,8 +132,7 @@ class SqsQueueTest extends AbstractTestCase
     public function testSendInvoiceToBatchSuccessfulSendViaDestructor()
     {
         $validator = new InvoiceValidator;
-        $invoice = new Invoice;
-        $invoice->setData($this->getValidInvoiceData(), $validator);
+        $invoice = Invoice::load($this->getValidInvoiceData(), $validator);
 
         $results = [
             # Result for GetQueueUrl command
@@ -163,8 +160,7 @@ class SqsQueueTest extends AbstractTestCase
     public function testSendInvoiceToBatchUnsuccessfulSendViaDestructor()
     {
         $validator = new InvoiceValidator;
-        $invoice = new Invoice;
-        $invoice->setData($this->getValidInvoiceData(), $validator);
+        $invoice = Invoice::load($this->getValidInvoiceData(), $validator);
 
         $sqsClient = $this->getMockedAwsSdk()->createSqs(['version' => '2012-11-05']);
         $cmd = $sqsClient->getCommand('SendMessage', [
@@ -192,8 +188,7 @@ class SqsQueueTest extends AbstractTestCase
     public function testSendInvoiceToBatchSuccessfulSendViaSendThreshold()
     {
         $validator = new InvoiceValidator;
-        $invoice = new Invoice;
-        $invoice->setData($this->getValidInvoiceData(), $validator);
+        $invoice = Invoice::load($this->getValidInvoiceData(), $validator);
 
         $results = [
             # Result for GetQueueUrl command
