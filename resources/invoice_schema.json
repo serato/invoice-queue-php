@@ -16,6 +16,10 @@
             "description": "Date of invoice creation in ISO8601 format.",
             "format": "date-time"
         },
+        "order_id": {
+            "type": "string",
+            "description": "The ID of order from the online system to which the invoice is related."
+        },
         "transaction_reference": {
             "type": "string",
             "description": "A payment provider-specific reference for the transaction associated with the invoice."
@@ -55,7 +59,7 @@
             "minItems": 1
         }
     },
-    "required": ["source", "invoice_id", "invoice_date", "transaction_reference", "payment_provider", "moneyworks_debtor_code", "currency", "gross_amount", "billing_address", "items"],
+    "required": ["source", "invoice_id", "invoice_date", "order_id", "transaction_reference", "payment_provider", "moneyworks_debtor_code", "currency", "gross_amount", "billing_address", "items"],
 
     "definitions": {
         "billing_address": {

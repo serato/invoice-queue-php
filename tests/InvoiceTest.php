@@ -73,6 +73,7 @@ class InvoiceTest extends AbstractTestCase
             'source' => 'SwsEc',
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
+            'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
             'payment_provider' => 'BT',
             'moneyworks_debtor_code' => 'WEBC001',
@@ -110,6 +111,7 @@ class InvoiceTest extends AbstractTestCase
             # 'source' => 'SwsEc', # Missing required field
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
+            'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
             'payment_provider' => 'BT',
             'moneyworks_debtor_code' => 'WEBC001',

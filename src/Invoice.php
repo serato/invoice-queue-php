@@ -105,6 +105,7 @@ class Invoice
         'source'                        => 'string',
         'invoice_id'                    => 'string',
         'invoice_date'                  => 'string',
+        'order_id'                      => 'string',
         'transaction_reference'         => 'string',
         'payment_provider'              => 'string',
         'moneyworks_debtor_code'        => 'string',
