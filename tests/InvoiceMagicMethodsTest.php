@@ -47,7 +47,7 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
     public function invoiceDataPropsProvider(): array
     {
         $data = [];
-        foreach (Invoice::DATA_KEYS as $key => $dataType) {
+        foreach (Invoice::getDataKeys() as $key => $dataType) {
             $data[] = [$key, $dataType];
         }
         return $data;
@@ -61,7 +61,6 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
         $invoice = new Invoice;
         $invoice->noSuchMethod();
     }
-
 
     /**
      * @expectedException \Serato\InvoiceQueue\Error\InvalidMethodNameError
