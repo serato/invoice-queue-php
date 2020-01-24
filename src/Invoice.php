@@ -28,6 +28,7 @@ use Exception;
  * @method string getInvoiceId()
  * @method string getInvoiceDate()
  * @method string getTransactionReference()
+ * @method string getPaymentProvider()
  * @method string getMoneyworksDebtorCode()
  * @method string getSubscriptionId()
  * @method string getCurrency()
@@ -46,6 +47,7 @@ use Exception;
  * @method self setInvoiceId(string $invoiceId)
  * @method self setInvoiceDate(string $dateIso8601)
  * @method self setTransactionReference(string $ref)
+ * @method self setPaymentProvider(string $ref)
  * @method self setMoneyworksDebtorCode(string $mwDebtorCode)
  * @method self setSubscriptionId(string $subId)
  * @method self setCurrency(string $currency)
@@ -104,6 +106,7 @@ class Invoice
         'invoice_id'                    => 'string',
         'invoice_date'                  => 'string',
         'transaction_reference'         => 'string',
+        'payment_provider'              => 'string',
         'moneyworks_debtor_code'        => 'string',
         'subscription_id'               => 'string',
         'currency'                      => 'string',

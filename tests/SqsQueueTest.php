@@ -219,6 +219,7 @@ class SqsQueueTest extends AbstractTestCase
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'transaction_reference' => 'A STRING VAL',
+            'payment_provider' => 'BT',
             'moneyworks_debtor_code' => 'WEBC001',
             'subscription_id' => 'A STRING VAL',
             'currency' => 'USD',

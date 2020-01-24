@@ -18,7 +18,12 @@
         },
         "transaction_reference": {
             "type": "string",
-            "description": "A reference for the transaction associated with the invoice."
+            "description": "A payment provider-specific reference for the transaction associated with the invoice."
+        },
+        "payment_provider": {
+            "type": "string",
+            "description": "A 2-letter code indicating the payment provider through which money was transacted. 'BT' = Braintree, 'PP' = PayPal.",
+            "enum": ["BT", "PP"]
         },
         "moneyworks_debtor_code": {
             "type": "string",
@@ -50,7 +55,7 @@
             "minItems": 1
         }
     },
-    "required": ["source", "invoice_id", "invoice_date", "transaction_reference", "moneyworks_debtor_code", "currency", "gross_amount", "billing_address", "items"],
+    "required": ["source", "invoice_id", "invoice_date", "transaction_reference", "payment_provider", "moneyworks_debtor_code", "currency", "gross_amount", "billing_address", "items"],
 
     "definitions": {
         "billing_address": {
