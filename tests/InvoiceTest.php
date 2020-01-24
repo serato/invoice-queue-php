@@ -50,7 +50,7 @@ class InvoiceTest extends AbstractTestCase
             'tax_code' => 'V'
         ];
 
-        $invoice = new Invoice;
+        $invoice = Invoice::create();
 
         $invoice->addItem(
             $item['sku'],

@@ -8,14 +8,6 @@ namespace Serato\InvoiceQueue;
  *
  * A model for working with invoice data.
  *
- * Data is added to, and retrieved from an instance via `set` and `get methods along
- * with the self::addItem method.
- *
- * An array of complete invoice data can be returned via the self::getData method.
- * This array conforms to the JSON schema used by Serato\InvoiceQueue\InvoiceValidator.
- *
- * The model can populated from an array using the Invoice::load static method.
- *
  * @method string getSource()
  * @method string getInvoiceId()
  * @method string getInvoiceDate()

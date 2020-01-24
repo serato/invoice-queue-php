@@ -10,6 +10,15 @@ use ArgumentCountError;
 use TypeError;
 use Exception;
 
+/**
+ * ** AbstractDataContainer **
+ *
+ * A container for working with data.
+ *
+ * Data is added to, and retrieved from an instance via `set` and `get methods.
+ *
+ * The model can populated from an array using the static::load static method.
+ */
 abstract class AbstractDataContainer
 {
     /** @var array */
@@ -31,7 +40,7 @@ abstract class AbstractDataContainer
      * @throws ValidationException
      * @throws ArgumentCountError
      */
-    public function __construct(?array $data = null, ?InvoiceValidator $validator = null)
+    private function __construct(?array $data = null, ?InvoiceValidator $validator = null)
     {
         if ($data !== null) {
             if ($validator === null) {
@@ -64,6 +73,16 @@ abstract class AbstractDataContainer
     final public function getData(): array
     {
         return $this->data;
+    }
+
+    /**
+     * Creates an instance
+     *
+     * @return static
+     */
+    final public static function create()
+    {
+        return new static();
     }
 
     /**

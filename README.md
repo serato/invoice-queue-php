@@ -104,7 +104,10 @@ that conforms to the [invoice JSON schema](./resources/invoice_schema.json).
 ```php
 use Serato\InvoiceQueue\Invoice;
 
-$invoice = new Invoice;
+# Constructor is private.
+# Always create using Instance::create() static method
+
+$invoice = Invoice::create();
 
 # Set individual properties
 
@@ -167,7 +170,7 @@ $queue->getQueueName();
 # Send an individual Invoice instance to the queue
 # Invoice data will be validated against the JSON schema
 
-$invoice = new Invoice;
+$invoice = Invoice::create();
 // ... populate $invoice
 $messageId = $queue->sendInvoice($invoice);
 
@@ -176,9 +179,9 @@ $messageId = $queue->sendInvoice($invoice);
 # Batch will sent when interal batch size limit is reached or when
 # SqsQueue instance is destroyed
 
-$invoice1 = new Invoice;
+$invoice1 = Invoice::create();
 // ... populate $invoice1
-$invoice2 = new Invoice;
+$invoice2 = Invoice::create();
 // ... populate $invoice2
 
 $queue

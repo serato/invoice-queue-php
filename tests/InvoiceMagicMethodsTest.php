@@ -39,7 +39,7 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
         $setMethodName = 'set' . $baseMethodName;
         $getMethodName = 'get' . $baseMethodName;
 
-        $invoice = new Invoice;
+        $invoice = Invoice::create();
         $invoice->$setMethodName($val);
         $this->assertEquals($val, $invoice->$getMethodName());
     }
@@ -58,7 +58,7 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testInvalidMethodName()
     {
-        $invoice = new Invoice;
+        $invoice = Invoice::create();
         $invoice->noSuchMethod();
     }
 
@@ -67,7 +67,7 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testInvalidGetMethodName()
     {
-        $invoice = new Invoice;
+        $invoice = Invoice::create();
         $invoice->getNoSuchMethod();
     }
 
@@ -76,7 +76,7 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testInvalidSetMethodName()
     {
-        $invoice = new Invoice;
+        $invoice = Invoice::create();
         $invoice->setNoSuchMethod('val');
     }
 
@@ -87,7 +87,7 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testInvalidGetMethodArgs()
     {
-        $invoice = new Invoice;
+        $invoice = Invoice::create();
         $invoice->getSource('val');
     }
 
@@ -98,7 +98,7 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testInvalidSetMethodArgs1()
     {
-        $invoice = new Invoice;
+        $invoice = Invoice::create();
         $invoice->setSource();
     }
 
@@ -109,7 +109,7 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testInvalidSetMethodArgs2()
     {
-        $invoice = new Invoice;
+        $invoice = Invoice::create();
         $invoice->setSource('val', 'val');
     }
 
@@ -120,7 +120,7 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testInvalidSetMethodArgType()
     {
-        $invoice = new Invoice;
+        $invoice = Invoice::create();
         $invoice->setSource(0);
     }
 
@@ -129,7 +129,7 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testGetMethodNullDefaultValue()
     {
-        $invoice = new Invoice;
+        $invoice = Invoice::create();
         $this->assertEquals(null, $invoice->getSource());
     }
 }

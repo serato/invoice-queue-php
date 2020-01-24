@@ -115,7 +115,7 @@ class SqsQueueTest extends AbstractTestCase
     public function testSendInvoiceInvalidInvoice($validator)
     {
         # Don't set any properties = invalid.
-        $invoice = new Invoice;
+        $invoice = Invoice::create();
         $sqsQueue = new SqsQueue($this->getMockedAwsSdk()->createSqs(['version' => '2012-11-05']), 'test');
         $sqsQueue->sendInvoice($invoice, $validator);
     }
