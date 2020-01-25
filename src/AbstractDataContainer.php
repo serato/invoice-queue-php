@@ -48,7 +48,7 @@ abstract class AbstractDataContainer
                     'You must provide a InvoiceValidator instance when setting the data argument'
                 );
             }
-            if ($validator->validateArray($data)) {
+            if ($validator->validateArray($data, $this->getSchemaDefinition())) {
                 $this->data = $data;
             } else {
                 throw new ValidationException($validator->getErrors());
@@ -62,6 +62,15 @@ abstract class AbstractDataContainer
      * @return array
      */
     abstract public static function getDataKeys(): array;
+
+    /**
+     * Defines the named definition within the JSON schema against which to validate data.
+     *
+     * When NULL data is validated against the root schema.
+     *
+     * @return string|null
+     */
+    abstract protected function getSchemaDefinition(): ?string;
 
     /**
      * Returns an array structure containing complete invoice data.

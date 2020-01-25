@@ -77,6 +77,14 @@ class Invoice extends AbstractDataContainer
     }
 
     /**
+     * {@inheritDoc}
+     */
+    protected function getSchemaDefinition(): ?string
+    {
+        return null;
+    }
+
+    /**
      * Adds a line item to the invoice
      *
      * @param string    $sku            SKU code of line item.
