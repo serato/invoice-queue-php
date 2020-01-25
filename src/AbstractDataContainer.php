@@ -24,18 +24,18 @@ abstract class AbstractDataContainer
     /** @var array */
     protected $data = [];
 
+    /** @var InvoiceValidator */
+    protected $validator;
+
     /**
      * Constructs the object.
      *
      * Optionally takes a array of data, $data, and InvoiceValidator instance with which to populate
      * the object.
      *
-     * If $data is provided an InvoiceValidator instance must also be provided.
-     *
      * @param array|null $data
      * @param InvoiceValidator|null $validator
      * @throws ValidationException
-     * @throws ArgumentCountError
      */
     private function __construct(?array $data = null, ?InvoiceValidator $validator = null)
     {
@@ -43,11 +43,11 @@ abstract class AbstractDataContainer
             $this->setData(static::getBaseData());
         } else {
             if ($validator === null) {
-                throw new ArgumentCountError(
-                    'You must provide a InvoiceValidator instance when setting the data argument'
-                );
+                $this->validator = new InvoiceValidator;
+            } else {
+                $this->validator = $validator;
             }
-            if ($validator->validateArray($data, static::getSchemaDefinition())) {
+            if ($this->validator->validateArray($data, static::getSchemaDefinition())) {
                 $this->setData($data);
             } else {
                 throw new ValidationException($validator->getErrors());
@@ -104,10 +104,10 @@ abstract class AbstractDataContainer
      * Creates an instance from an array.
      *
      * @param array $data
-     * @param InvoiceValidator $validator
+     * @param InvoiceValidator|null $validator
      * @return static
      */
-    final public static function load(array $data, InvoiceValidator $validator)
+    final public static function load(array $data, ?InvoiceValidator $validator)
     {
         return new static($data, $validator);
     }

@@ -10,11 +10,11 @@ use Serato\InvoiceQueue\InvoiceValidator;
 class InvoiceItemTest extends AbstractTestCase
 {
     /**
-     * Tests the setData method with valid data
+     * Tests the Load method with valid data
      *
      * @return void
      */
-    public function testSetDataWithValidData()
+    public function testLoadWithValidData()
     {
         $validator = new InvoiceValidator;
         $invoiceItem = InvoiceItem::load($this->getValidInvoiceData(), $validator);
@@ -22,12 +22,12 @@ class InvoiceItemTest extends AbstractTestCase
     }
 
     /**
-     * Tests the setData method with invalid data
+     * Tests the Load method with invalid data
      *
      * @return void
      * @expectedException \Serato\InvoiceQueue\Exception\ValidationException
      */
-    public function testSetDataWithInvalidData()
+    public function testLoadWithInvalidData()
     {
         $validator = new InvoiceValidator;
         $invoiceItem = InvoiceItem::load($this->getInvalidInvoiceData(), $validator);

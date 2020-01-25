@@ -50,6 +50,9 @@ namespace Serato\InvoiceQueue;
  */
 class Invoice extends AbstractDataContainer
 {
+    /** @var array */
+    private $items = [];
+
     public static function getDataKeys(): array
     {
         return [
@@ -96,39 +99,39 @@ class Invoice extends AbstractDataContainer
     }
 
     /**
-     * Adds a line item to the invoice
+     * Adds an invoice item to the invoice
      *
-     * @param string    $sku            SKU code of line item.
-     * @param integer   $quantity       Quantity of unit items.
-     * @param integer   $amountGross    Gross amount of the line item ((unit price + unit tax) * quantity),
-     *                                  expressed in cents.
-     * @param integer   $amountTax      Tax amount of the line item (unit tax * quantity), expressed in cents.
-     * @param integer   $amountNet      Net amount of the line item (unit price * quantity), expressed in cents.
-     * @param integer   $unitPrice      Unit price of the line item, expressed in cents.
-     * @param string    $taxCode        Tax code for line item. 'V' when any rate of tax is added, 'Z' when no
-     *                                  tax is added.
+     * @param InvoiceItem $item
      * @return self
      */
-    public function addItem(
-        string $sku,
-        int $quantity,
-        int $amountGross,
-        int $amountTax,
-        int $amountNet,
-        int $unitPrice,
-        string $taxCode
-    ): self {
-        $item = [
-            'sku' => $sku,
-            'quantity' => $quantity,
-            'amount_gross' => $amountGross,
-            'amount_tax' => $amountTax,
-            'amount_net' => $amountNet,
-            'unit_price' => $unitPrice,
-            'tax_code' => $taxCode
-        ];
-        $this->data['items'][] = $item;
+    public function addItem(InvoiceItem $item): self
+    {
+        $this->items[] = $item;
+        $this->data['items'][] = $item->getData();
         return $this;
+    }
+
+    /**
+     * Returns an array of InvoiceItem instances
+     *
+     * @return array
+     */
+    public function getItems(): array
+    {
+        return $this->items;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function setData(array $data): void
+    {
+        parent::setData($data);
+        if (isset($data['items'])) {
+            foreach ($data['items'] as $item) {
+                $this->items[] = InvoiceItem::load($item, $this->validator);
+            }
+        }
     }
 
     /**
