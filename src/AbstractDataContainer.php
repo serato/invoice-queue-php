@@ -22,10 +22,7 @@ use Exception;
 abstract class AbstractDataContainer
 {
     /** @var array */
-    protected $data = [
-        'billing_address' => [],
-        'items' => []
-    ];
+    protected $data = [];
 
     /**
      * Constructs the object.
@@ -42,14 +39,16 @@ abstract class AbstractDataContainer
      */
     private function __construct(?array $data = null, ?InvoiceValidator $validator = null)
     {
-        if ($data !== null) {
+        if ($data === null) {
+            $this->setData(static::getBaseData());
+        } else {
             if ($validator === null) {
                 throw new ArgumentCountError(
                     'You must provide a InvoiceValidator instance when setting the data argument'
                 );
             }
-            if ($validator->validateArray($data, $this->getSchemaDefinition())) {
-                $this->data = $data;
+            if ($validator->validateArray($data, static::getSchemaDefinition())) {
+                $this->setData($data);
             } else {
                 throw new ValidationException($validator->getErrors());
             }
@@ -70,7 +69,14 @@ abstract class AbstractDataContainer
      *
      * @return string|null
      */
-    abstract protected function getSchemaDefinition(): ?string;
+    abstract protected static function getSchemaDefinition(): ?string;
+
+    /**
+     * Defines the base array structure for a new object instance
+     *
+     * @return array
+     */
+    abstract protected static function getBaseData(): array;
 
     /**
      * Returns an array structure containing complete invoice data.
@@ -104,6 +110,17 @@ abstract class AbstractDataContainer
     final public static function load(array $data, InvoiceValidator $validator)
     {
         return new static($data, $validator);
+    }
+
+    /**
+     * Sets the underlying data array
+     *
+     * @param array $data
+     * @return void
+     */
+    protected function setData(array $data): void
+    {
+        $this->data = $data;
     }
 
     /**

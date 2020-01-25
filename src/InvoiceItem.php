@@ -46,8 +46,16 @@ class InvoiceItem extends AbstractDataContainer
     /**
      * {@inheritDoc}
      */
-    protected function getSchemaDefinition(): ?string
+    protected static function getSchemaDefinition(): ?string
     {
         return 'line_item';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected static function getBaseData(): array
+    {
+        return [];
     }
 }

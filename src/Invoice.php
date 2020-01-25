@@ -79,9 +79,20 @@ class Invoice extends AbstractDataContainer
     /**
      * {@inheritDoc}
      */
-    protected function getSchemaDefinition(): ?string
+    protected static function getSchemaDefinition(): ?string
     {
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected static function getBaseData(): array
+    {
+        return [
+            'billing_address' => [],
+            'items' => []
+        ];
     }
 
     /**
