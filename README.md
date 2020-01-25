@@ -135,8 +135,13 @@ $data = $invoice->getData();
 # Use the `Invoice::load` static method to populate model with data
 # (the data will be validated against the JSON schema)
 
+$invoice = Invoice::load($data);
+
+# If loading multiple invoices, create a single InvoiceValidator
+# instance and pass it to `Invoice::load` for better performance.
 $validator = new Serato\InvoiceQueue\InvoiceValidator;
-$invoice = Invoice::load($data, $validator);
+$invoice1 = Invoice::load($data1, $validator);
+$invoice2 = Invoice::load($data2, $validator);
 
 ```
 
