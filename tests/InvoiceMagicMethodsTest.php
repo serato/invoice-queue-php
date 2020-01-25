@@ -6,6 +6,7 @@ namespace Serato\InvoiceQueue\Test;
 use Serato\InvoiceQueue\Test\AbstractTestCase;
 use Serato\InvoiceQueue\Invoice;
 use Serato\InvoiceQueue\InvoiceValidator;
+use ReflectionMethod;
 
 /**
  * Tests the magic methods implemented in Serato\InvoiceQueue\Invoice
@@ -46,8 +47,11 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
 
     public function invoiceDataPropsProvider(): array
     {
+        $getDataKeysMethod = new ReflectionMethod('\Serato\InvoiceQueue\Invoice', 'getDataKeys');
+        $getDataKeysMethod->setAccessible(true);
+
         $data = [];
-        foreach (Invoice::getDataKeys() as $key => $dataType) {
+        foreach ($getDataKeysMethod->invoke(null) as $key => $dataType) {
             $data[] = [$key, $dataType];
         }
         return $data;

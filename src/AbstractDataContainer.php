@@ -60,7 +60,7 @@ abstract class AbstractDataContainer
      *
      * @return array
      */
-    abstract public static function getDataKeys(): array;
+    abstract protected static function getDataKeys(): array;
 
     /**
      * Defines the named definition within the JSON schema against which to validate data.

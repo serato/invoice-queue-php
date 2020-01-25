@@ -53,7 +53,7 @@ class Invoice extends AbstractDataContainer
     /** @var array */
     private $items = [];
 
-    public static function getDataKeys(): array
+    protected static function getDataKeys(): array
     {
         return [
             # Property name                    Data type

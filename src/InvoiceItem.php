@@ -29,7 +29,7 @@ class InvoiceItem extends AbstractDataContainer
     /**
      * {@inheritDoc}
      */
-    public static function getDataKeys(): array
+    protected static function getDataKeys(): array
     {
         return [
             # Property name    Data type
