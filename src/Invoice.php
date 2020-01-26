@@ -6,7 +6,12 @@ namespace Serato\InvoiceQueue;
 /**
  * ** Invoice **
  *
- * A model for working with invoice data.
+ * A model for working with invoices.
+ *
+ * Use the `self::addItem` method to add instances of `Serato\InvoiceQueue\InvoiceItem`
+ * to the model.
+ * 
+ * Use the `self::getItems` method to return all `Serato\InvoiceQueue\InvoiceItem` instances.
  *
  * @method string getSource()
  * @method string getInvoiceId()
@@ -53,6 +58,9 @@ class Invoice extends AbstractDataContainer
     /** @var array */
     private $items = [];
 
+    /**
+     * {@inheritDoc}
+     */
     protected static function getDataKeys(): array
     {
         return [

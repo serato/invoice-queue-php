@@ -15,9 +15,32 @@ use Exception;
  *
  * A container for working with data.
  *
- * Data is added to, and retrieved from an instance via `set` and `get methods.
+ * Data attributes are defined in a array returned by `AbstractDataContainer::getDataKeys` method.
+ * This array takes the form of keys representing attribute names and values representing data types.
+ * Only scalar types are supported - boolean, integer, float and string.
  *
- * The model can populated from an array using the static::load static method.
+ * Data attributes can then be accessed via magic `get` and `set` methods whose names are camel cased
+ * versions of the data attribute names, prefixed with "get" and "set" accordingly.
+ *
+ * eg. for the following data attribute array:
+ *
+ *    [
+ *         'first_name' => 'string',
+ *         'net_tax_amount' => 'integer'
+ *    ];
+ *
+ *    $instance->setFirstName('Bob');
+ *    $instance->getFirstName();
+ *    $instance->setNetTaxAmount(123);
+ *    $instance->getNetTaxAmount();
+ *
+ * The underlying data can be accessed in it's entirety via the public `AbstractDataContainer::getData`
+ * method.
+ *
+ * A model can be created and populated from an array using the public
+ * `AbstractDataContainer::load` static method. The array should be of the same structure as that returned
+ * from the `AbstractDataContainer::getData` and will be validated using a `Serato\InvoiceQueue\InvoiceValidator`
+ * instance.
  */
 abstract class AbstractDataContainer
 {
@@ -50,13 +73,20 @@ abstract class AbstractDataContainer
             if ($this->validator->validateArray($data, static::getSchemaDefinition())) {
                 $this->setData($data);
             } else {
-                throw new ValidationException($validator->getErrors());
+                throw new ValidationException($this->validator->getErrors());
             }
         }
     }
 
     /**
-     * Returns a property name/property type map
+     * Returns a property name/type map. Array takes the form of keys representing attribute
+     * names and values representing data types.
+     *
+     * eg.
+     *    [
+     *         'first_name' => 'string',
+     *         'net_tax_amount' => 'integer'
+     *    ];
      *
      * @return array
      */
@@ -124,6 +154,7 @@ abstract class AbstractDataContainer
     }
 
     /**
+     * @return mixed
      * @throws InvalidMethodNameError
      * @throws ArgumentCountError
      * @throws TypeError

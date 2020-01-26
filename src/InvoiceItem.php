@@ -6,7 +6,7 @@ namespace Serato\InvoiceQueue;
 /**
  * ** Invoice **
  *
- * A model for working with invoice data.
+ * A model for working with invoice items.
  *
  * @method string getSku()
  * @method string getQuantity()
