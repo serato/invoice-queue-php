@@ -9,6 +9,7 @@ use Aws\Exception\AwsException;
 use Aws\Sqs\Exception\SqsException;
 use Serato\InvoiceQueue\Exception\ValidationException;
 use Serato\InvoiceQueue\Exception\QueueSendException;
+use Psr\Log\LoggerInterface;
 use Exception;
 
 /**
@@ -23,6 +24,9 @@ class SqsQueue
     /** @var SqsClient */
     private $sqsClient;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     /** @var string */
     private $queueName;
 
@@ -35,12 +39,14 @@ class SqsQueue
     /**
      * Constructs the object
      *
-     * @param SqsClient $sqsClient  A SqsClient instance from the AWS SDK
-     * @param string $queueEnv      One of `test` or `production`
+     * @param SqsClient         $sqsClient  A SqsClient instance from the AWS SDK
+     * @param string            $queueEnv   One of `test` or `production`
+     * @param LoggerInterface   $logger     PSR logger interface instance
      */
-    public function __construct(SqsClient $sqsClient, string $queueEnv)
+    public function __construct(SqsClient $sqsClient, string $queueEnv, LoggerInterface $logger)
     {
         $this->sqsClient = $sqsClient;
+        $this->logger = $logger;
         if ($queueEnv !== 'test' && $queueEnv !== 'production') {
             throw new Exception(
                 "Invalid `queueEnv` value '" . $queueEnv . "'. Valid values are 'test' or 'production'"

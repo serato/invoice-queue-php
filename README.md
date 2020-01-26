@@ -164,14 +164,18 @@ or in batches, and create queues if they don't currently exist.
 ```php
 use Aws\Sdk;
 use Serato\InvoiceQueue\SqsQueue;
+use Monolog\Logger;
 
 # Create AWS SQS client instance
 $awsSdk = new Sdk();
 $awsSqsClient->createSqs();
 
-# Constructor requires an AWS SQS client and an environment string
-# (one of 'test' or 'production')
-$queue = new SqsQueue($awsSqsClient, 'test');
+# Create a PSR LogInterface instance
+$logger = new Logger('sqsqueue-log');
+
+# Constructor requires an AWS SQS client, PSR LogInterface and an
+# environment string (one of 'test' or 'production')
+$queue = new SqsQueue($awsSqsClient, 'test', $logger);
 
 # Get the queue name or URL of the underlying SQS queue
 $queue->getQueueUrl();

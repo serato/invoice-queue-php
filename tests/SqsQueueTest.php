@@ -23,7 +23,7 @@ class SqsQueueTest extends AbstractTestCase
         $results = [
             new Result(['QueueUrl'  => $queueUrl])
         ];
-        $sqsQueue = new SqsQueue($this->getMockedAwsSdk($results)->createSqs(['version' => '2012-11-05']), 'test');
+        $sqsQueue = $this->getSqsQueueInstance($results);
         $this->assertEquals($queueUrl, $sqsQueue->getQueueUrl());
         $this->assertEquals(0, $this->getAwsMockHandlerStackCount());
     }
@@ -51,7 +51,7 @@ class SqsQueueTest extends AbstractTestCase
             new Result(['QueueUrl'  => $queueUrl])
         ];
 
-        $sqsQueue = new SqsQueue($this->getMockedAwsSdk($results)->createSqs(['version' => '2012-11-05']), 'test');
+        $sqsQueue = $this->getSqsQueueInstance($results);
         $this->assertEquals($queueUrl, $sqsQueue->getQueueUrl());
         $this->assertEquals(0, $this->getAwsMockHandlerStackCount());
     }
@@ -74,7 +74,7 @@ class SqsQueueTest extends AbstractTestCase
             new Result(['MessageId'  => $messageId])
         ];
 
-        $sqsQueue = new SqsQueue($this->getMockedAwsSdk($results)->createSqs(['version' => '2012-11-05']), 'test');
+        $sqsQueue = $this->getSqsQueueInstance($results);
         
         $this->assertEquals($messageId, $sqsQueue->sendInvoice($invoice, $validator));
         $this->assertEquals(0, $this->getAwsMockHandlerStackCount());
@@ -102,7 +102,7 @@ class SqsQueueTest extends AbstractTestCase
             new AwsException('Exception message', $cmd)
         ];
 
-        $sqsQueue = new SqsQueue($this->getMockedAwsSdk($results)->createSqs(['version' => '2012-11-05']), 'test');
+        $sqsQueue = $this->getSqsQueueInstance($results);
         $sqsQueue->sendInvoice($invoice, $validator);
     }
 
@@ -116,7 +116,7 @@ class SqsQueueTest extends AbstractTestCase
     {
         # Don't set any properties = invalid.
         $invoice = Invoice::create();
-        $sqsQueue = new SqsQueue($this->getMockedAwsSdk()->createSqs(['version' => '2012-11-05']), 'test');
+        $sqsQueue = $this->getSqsQueueInstance();
         $sqsQueue->sendInvoice($invoice, $validator);
     }
 
@@ -141,7 +141,7 @@ class SqsQueueTest extends AbstractTestCase
             new Result([])
         ];
 
-        $sqsQueue = new SqsQueue($this->getMockedAwsSdk($results)->createSqs(['version' => '2012-11-05']), 'test');
+        $sqsQueue = $this->getSqsQueueInstance($results);
 
         $sqsQueue->sendInvoiceToBatch($invoice, $validator);
         # Destroy the object. This should trigger the batch send.
@@ -174,7 +174,7 @@ class SqsQueueTest extends AbstractTestCase
             new AwsException('Exception message', $cmd)
         ];
 
-        $sqsQueue = new SqsQueue($this->getMockedAwsSdk($results)->createSqs(['version' => '2012-11-05']), 'test');
+        $sqsQueue = $this->getSqsQueueInstance($results);
 
         $sqsQueue->sendInvoiceToBatch($invoice, $validator);
         # Destroy the object. This should trigger the batch send.
@@ -199,7 +199,7 @@ class SqsQueueTest extends AbstractTestCase
             new Result([])
         ];
 
-        $sqsQueue = new SqsQueue($this->getMockedAwsSdk($results)->createSqs(['version' => '2012-11-05']), 'test');
+        $sqsQueue = $this->getSqsQueueInstance($results);
 
         for ($i = 0; $i < (SqsQueue::SEND_BATCH_SIZE + 1); $i++) {
             $sqsQueue->sendInvoiceToBatch($invoice, $validator);
@@ -210,6 +210,15 @@ class SqsQueueTest extends AbstractTestCase
 
         # Confirm the stack is empty (ie. that the API calls HAVE been made)
         $this->assertEquals(0, $this->getAwsMockHandlerStackCount());
+    }
+
+    private function getSqsQueueInstance(array $results = []): SqsQueue
+    {
+        return new SqsQueue(
+            $this->getMockedAwsSdk($results)->createSqs(['version' => '2012-11-05']),
+            'test',
+            $this->getLogger()
+        );
     }
 
     private function getValidInvoiceData()

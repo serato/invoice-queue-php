@@ -10,7 +10,7 @@ namespace Serato\InvoiceQueue;
  *
  * Use the `self::addItem` method to add instances of `Serato\InvoiceQueue\InvoiceItem`
  * to the model.
- * 
+ *
  * Use the `self::getItems` method to return all `Serato\InvoiceQueue\InvoiceItem` instances.
  *
  * @method string getSource()
