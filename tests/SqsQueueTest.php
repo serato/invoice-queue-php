@@ -66,7 +66,7 @@ class SqsQueueTest extends AbstractTestCase
     {
         $messageId = '123abc456';
     
-        $invoice = Invoice::load($this->getValidInvoiceData(), new InvoiceValidator);
+        $invoice = Invoice::load($this->getValidInvoiceData()[0], new InvoiceValidator);
 
         $results = [
             # Result for GetQueueUrl command
@@ -85,6 +85,7 @@ class SqsQueueTest extends AbstractTestCase
 
         $this->assertTrue($log !== '');
         $this->assertTrue(strpos($log, '.INFO:') !== false);
+        $this->assertTrue(strpos($log, 'SQS sendMessage') !== false);
     }
 
     /**
@@ -95,7 +96,7 @@ class SqsQueueTest extends AbstractTestCase
      */
     public function testSendInvoiceValidInvoiceUnsuccessfulDelivery($validator)
     {
-        $invoice = Invoice::load($this->getValidInvoiceData(), new InvoiceValidator);
+        $invoice = Invoice::load($this->getValidInvoiceData()[0], new InvoiceValidator);
 
         $sqsClient = $this->getMockedAwsSdk()->createSqs(['version' => '2012-11-05']);
         $cmd = $sqsClient->getCommand('SendMessage', [
@@ -122,7 +123,7 @@ class SqsQueueTest extends AbstractTestCase
      */
     public function testSendInvoiceValidInvoiceUnsuccessfulDeliveryLogEntry($validator)
     {
-        $invoice = Invoice::load($this->getValidInvoiceData(), new InvoiceValidator);
+        $invoice = Invoice::load($this->getValidInvoiceData()[0], new InvoiceValidator);
 
         $sqsClient = $this->getMockedAwsSdk()->createSqs(['version' => '2012-11-05']);
         $cmd = $sqsClient->getCommand('SendMessage', [
@@ -147,6 +148,7 @@ class SqsQueueTest extends AbstractTestCase
 
         $this->assertTrue($log !== '');
         $this->assertTrue(strpos($log, '.ALERT:') !== false);
+        $this->assertTrue(strpos($log, 'SQS sendMessage') !== false);
     }
 
     /**
@@ -175,7 +177,7 @@ class SqsQueueTest extends AbstractTestCase
     public function testSendInvoiceToBatchSuccessfulSendViaDestructor()
     {
         $validator = new InvoiceValidator;
-        $invoice = Invoice::load($this->getValidInvoiceData(), $validator);
+        $invoice = Invoice::load($this->getValidInvoiceData()[0], $validator);
 
         $results = [
             # Result for GetQueueUrl command
@@ -203,7 +205,6 @@ class SqsQueueTest extends AbstractTestCase
     public function testSendInvoiceToBatchUnsuccessfulSendViaDestructor()
     {
         $validator = new InvoiceValidator;
-        $invoice = Invoice::load($this->getValidInvoiceData(), $validator);
 
         $sqsClient = $this->getMockedAwsSdk()->createSqs(['version' => '2012-11-05']);
         $cmd = $sqsClient->getCommand('SendMessage', [
@@ -219,9 +220,58 @@ class SqsQueueTest extends AbstractTestCase
 
         $sqsQueue = $this->getSqsQueueInstance($results);
 
-        $sqsQueue->sendInvoiceToBatch($invoice, $validator);
+        foreach ($this->getValidInvoiceData() as $data) {
+            $invoice = Invoice::load($data, $validator);
+            $sqsQueue->sendInvoiceToBatch($invoice, $validator);
+        }
         # Destroy the object. This should trigger the batch send.
         unset($sqsQueue);
+    }
+
+
+    /**
+     * Tests the SqsQueue::sendToBatch method with a single invoice and that the batch
+     * is unsuccessfully sent when SqsQueue method is destructed.
+     *
+     * Test that a log entry is created
+     */
+    public function testSendInvoiceToBatchUnsuccessfulSendViaDestructorLogEntry()
+    {
+        $validator = new InvoiceValidator;
+
+        $sqsClient = $this->getMockedAwsSdk()->createSqs(['version' => '2012-11-05']);
+        $cmd = $sqsClient->getCommand('SendMessage', [
+            'QueueName' => 'my-queue-name'
+        ]);
+
+        $results = [
+            # Result for GetQueueUrl command
+            new Result(['QueueUrl'  => 'my-queue-url']),
+            # Result for SendMessage command
+            new AwsException('Exception message', $cmd)
+        ];
+
+        $sqsQueue = $this->getSqsQueueInstance($results);
+
+        foreach ($this->getValidInvoiceData() as $data) {
+            $invoice = Invoice::load($data, $validator);
+            $sqsQueue->sendInvoiceToBatch($invoice, $validator);
+        }
+
+        try {
+            # Destroy the object. This should trigger the batch send.
+            unset($sqsQueue);
+        } catch (Exception $e) {
+            # Ignore
+        }
+
+        $log = trim($this->getLogFileContents());
+
+        $this->assertTrue($log !== '');
+        $this->assertTrue(strpos($log, '.ALERT:') !== false);
+        $this->assertTrue(strpos($log, 'SQS sendMessageBatch') !== false);
+        # 1 log entry per invoice in the batch
+        $this->assertEquals(2, count(explode("\n", $log)));
     }
 
     /**
@@ -231,7 +281,7 @@ class SqsQueueTest extends AbstractTestCase
     public function testSendInvoiceToBatchSuccessfulSendViaSendThreshold()
     {
         $validator = new InvoiceValidator;
-        $invoice = Invoice::load($this->getValidInvoiceData(), $validator);
+        $invoice = Invoice::load($this->getValidInvoiceData()[0], $validator);
 
         $results = [
             # Result for GetQueueUrl command
@@ -266,37 +316,73 @@ class SqsQueueTest extends AbstractTestCase
 
     private function getValidInvoiceData()
     {
-        return  [
-            'source' => 'SwsEc',
-            'invoice_id' => 'A STRING VAL',
-            'invoice_date' => '2020-01-21T08:54:09Z',
-            'order_id' => 'ORDER--ID',
-            'transaction_reference' => 'A STRING VAL',
-            'payment_provider' => 'BT',
-            'moneyworks_debtor_code' => 'WEBC001',
-            'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
-            'gross_amount' => 0,
-            'billing_address' => [
-                'company_name' => 'Company Inc',
-                'person_name' => 'Jo Bloggs',
-                'address_1' => '123 Street Road',
-                'address_2' => 'Suburbia',
-                'address_3' => 'The Stixx',
-                'city' => 'Townsville',
-                'region' => 'Statey',
-                'post_code' => '90210',
-                'country_iso' => 'NZ'
+        return [
+            [
+                'source' => 'SwsEc',
+                'invoice_id' => 'INV-1234ABCD',
+                'invoice_date' => '2020-01-21T08:54:09Z',
+                'order_id' => '1234567',
+                'transaction_reference' => 'REF-ABCD1234',
+                'payment_provider' => 'BT',
+                'moneyworks_debtor_code' => 'WEBC001',
+                'subscription_id' => 'SUB-XYZ-ABC',
+                'currency' => 'USD',
+                'gross_amount' => 0,
+                'billing_address' => [
+                    'company_name' => 'Company Inc',
+                    'person_name' => 'Jo Bloggs',
+                    'address_1' => '123 Street Road',
+                    'address_2' => 'Suburbia',
+                    'address_3' => 'The Stixx',
+                    'city' => 'Townsville',
+                    'region' => 'Statey',
+                    'post_code' => '90210',
+                    'country_iso' => 'NZ'
+                ],
+                'items' => [
+                    [
+                        'sku' => 'SKU1',
+                        'quantity' => 2,
+                        'amount_gross' => 2200,
+                        'amount_tax' => 200,
+                        'amount_net' => 2000,
+                        'unit_price' => 1000,
+                        'tax_code' => 'V'
+                    ]
+                ]
             ],
-            'items' => [
-                [
-                    'sku' => 'SKU1',
-                    'quantity' => 1,
-                    'amount_gross' => 0,
-                    'amount_tax' => 0,
-                    'amount_net' => 0,
-                    'unit_price' => 0,
-                    'tax_code' => 'V'
+            [
+                'source' => 'SwsEc',
+                'invoice_id' => 'INV-ABCD-1234',
+                'invoice_date' => '2020-01-21T08:54:09Z',
+                'order_id' => '1234568',
+                'transaction_reference' => 'REF-1234ABCD',
+                'payment_provider' => 'BT',
+                'moneyworks_debtor_code' => 'WEBC001',
+                'subscription_id' => 'SUB-ABC-XYZ',
+                'currency' => 'USD',
+                'gross_amount' => 0,
+                'billing_address' => [
+                    'company_name' => 'Company Inc',
+                    'person_name' => 'Jo Bloggs',
+                    'address_1' => '123 Street Road',
+                    'address_2' => 'Suburbia',
+                    'address_3' => 'The Stixx',
+                    'city' => 'Townsville',
+                    'region' => 'Statey',
+                    'post_code' => '90210',
+                    'country_iso' => 'NZ'
+                ],
+                'items' => [
+                    [
+                        'sku' => 'SKU1',
+                        'quantity' => 1,
+                        'amount_gross' => 1100,
+                        'amount_tax' => 100,
+                        'amount_net' => 1000,
+                        'unit_price' => 1000,
+                        'tax_code' => 'V'
+                    ]
                 ]
             ]
         ];

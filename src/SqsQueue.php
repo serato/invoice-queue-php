@@ -88,10 +88,11 @@ class SqsQueue
             $result = $this->getSqsClient()->sendMessage($this->invoiceToSqsSendParams($invoice));
             $this->logQueueSendResult(
                 'INFO',
-                $invoice->getInvoiceId() . ' queue send success',
+                $invoice->getInvoiceId() . ' SQS sendMessage success',
                 [
                     'invoice_id' => $invoice->getInvoiceId(),
-                    'sqs_message_id' => $result['MessageId']
+                    'sqs_message_id' => $result['MessageId'],
+                    'caller' => __METHOD__
                 ],
                 ['aws_result' => $result->toArray()]
             );
@@ -99,8 +100,11 @@ class SqsQueue
         } catch (AwsException $e) {
             $this->logQueueSendResult(
                 'ALERT',
-                $invoice->getInvoiceId() . ' queue send failure',
-                ['invoice_id' => $invoice->getInvoiceId()],
+                $invoice->getInvoiceId() . ' SQS sendMessage failure',
+                [
+                    'invoice_id' => $invoice->getInvoiceId(),
+                    'caller' => __METHOD__
+                ],
                 [
                     'aws_exception' => [
                         'message' => $e->getMessage(),
@@ -263,6 +267,22 @@ class SqsQueue
                 ]);
                 return $result;
             } catch (AwsException $e) {
+                foreach ($this->messageBatch['invoices'] as $invoice) {
+                    $this->logQueueSendResult(
+                        'ALERT',
+                        $invoice->getInvoiceId() . ' SQS sendMessageBatch failure',
+                        [
+                            'invoice_id' => $invoice->getInvoiceId(),
+                            'caller' => __METHOD__
+                        ],
+                        [
+                            'aws_exception' => [
+                                'message' => $e->getMessage(),
+                                'extra' => $e->toArray()
+                            ]
+                        ]
+                    );
+                }
                 $this->throwQueueSendException($e);
             }
             # Reset the batch even in event of a failure otherwise we'll
