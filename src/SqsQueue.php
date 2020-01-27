@@ -132,10 +132,10 @@ class SqsQueue
         if (count($this->messageBatch['invoices']) === self::SEND_BATCH_SIZE) {
             $this->sendMessageBatch();
         }
-        $this->messageBatch['invoices'][] = $invoice;
+        $this->messageBatch['invoices'][$invoice->getInvoiceId()] = $invoice;
         $this->messageBatch['sqsParams'][] = $this->invoiceToSqsSendParams(
             $invoice,
-            (string)count($this->messageBatch)
+            $invoice->getInvoiceId()
         );
         return $this;
     }
@@ -265,9 +265,39 @@ class SqsQueue
                     'Entries'   => $this->messageBatch['sqsParams'],
                     'QueueUrl'  => $this->getQueueUrl()
                 ]);
+                # Create 1 log entry per invoice in the batch
+                if (isset($result['Successful'])) {
+                    foreach ($result['Successful'] as $resultData) {
+                        $invoice = $this->messageBatch['invoices'][$resultData['Id']];
+                        $this->logQueueSendResult(
+                            'INFO',
+                            $invoice->getInvoiceId() . ' SQS sendMessageBatch success',
+                            [
+                                'invoice_id' => $invoice->getInvoiceId(),
+                                'caller' => __METHOD__
+                            ],
+                            ['aws_result' => $resultData]
+                        );
+                    }
+                }
+                if (isset($result['Failed'])) {
+                    foreach ($result['Failed'] as $resultData) {
+                        $invoice = $this->messageBatch['invoices'][$resultData['Id']];
+                        $this->logQueueSendResult(
+                            'ALERT',
+                            $invoice->getInvoiceId() . ' SQS sendMessageBatch failure',
+                            [
+                                'invoice_id' => $invoice->getInvoiceId(),
+                                'caller' => __METHOD__
+                            ],
+                            ['aws_result' => $resultData]
+                        );
+                    }
+                }
                 return $result;
             } catch (AwsException $e) {
-                foreach ($this->messageBatch['invoices'] as $invoice) {
+                # The entire batch failed :-(
+                foreach ($this->messageBatch['invoices'] as $invoiceId => $invoice) {
                     $this->logQueueSendResult(
                         'ALERT',
                         $invoice->getInvoiceId() . ' SQS sendMessageBatch failure',

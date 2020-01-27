@@ -197,7 +197,7 @@ class SqsQueueTest extends AbstractTestCase
     }
 
     /**
-     * Tests the SqsQueue::sendToBatch method with a single invoice and that the batch
+     * Tests the SqsQueue::sendToBatch method with multiple invoices and that the batch
      * is unsuccessfully sent when SqsQueue method is destructed.
      *
      * @expectedException \Serato\InvoiceQueue\Exception\QueueSendException
@@ -230,7 +230,7 @@ class SqsQueueTest extends AbstractTestCase
 
 
     /**
-     * Tests the SqsQueue::sendToBatch method with a single invoice and that the batch
+     * Tests the SqsQueue::sendToBatch method with multiple invoices and that the batch
      * is unsuccessfully sent when SqsQueue method is destructed.
      *
      * Test that a log entry is created
@@ -295,6 +295,7 @@ class SqsQueueTest extends AbstractTestCase
         $sqsQueue = $this->getSqsQueueInstance($results);
 
         for ($i = 0; $i < (SqsQueue::SEND_BATCH_SIZE + 1); $i++) {
+            $invoice->setInvoiceId($invoice->getInvoiceId() . '-' . $i);
             $sqsQueue->sendInvoiceToBatch($invoice, $validator);
         }
         
