@@ -355,8 +355,6 @@ class SqsQueue
         throw new QueueSendException($msg);
     }
 
-    //private function
-
     private function logQueueSendResult(string $level, string $message, array $context, array $extra = []): void
     {
         $this->logger->log(
