@@ -28,9 +28,6 @@ class SqsQueue
     private $logger;
 
     /** @var string */
-    private $hostAppName;
-
-    /** @var string */
     private $queueName;
 
     /** @var string */
@@ -48,22 +45,20 @@ class SqsQueue
      * @param SqsClient         $sqsClient      A SqsClient instance from the AWS SDK
      * @param string            $queueEnv       One of `test` or `production`
      * @param LoggerInterface   $logger         PSR logger interface instance
-     * @param string            $hostAppName    Host application name (for logging purposes)
      */
     public function __construct(
         SqsClient $sqsClient,
         string $queueEnv,
-        LoggerInterface $logger,
-        string $hostAppName
+        LoggerInterface $logger
     ) {
         $this->sqsClient = $sqsClient;
         $this->logger = $logger;
-        $this->hostAppName = $hostAppName;
         if ($queueEnv !== 'test' && $queueEnv !== 'production') {
             throw new Exception(
                 "Invalid `queueEnv` value '" . $queueEnv . "'. Valid values are 'test' or 'production'"
             );
         }
+
         # FIFO queue names MUST end in ".fifo"
         $this->queueName = 'InvoiceData-' . $queueEnv . '.fifo';
     }
@@ -91,8 +86,28 @@ class SqsQueue
         }
         try {
             $result = $this->getSqsClient()->sendMessage($this->invoiceToSqsSendParams($invoice));
+            $this->logQueueSendResult(
+                'INFO',
+                $invoice->getInvoiceId() . ' queue send success',
+                [
+                    'invoice_id' => $invoice->getInvoiceId(),
+                    'sqs_message_id' => $result['MessageId']
+                ],
+                ['aws_result' => $result->toArray()]
+            );
             return $result['MessageId'];
         } catch (AwsException $e) {
+            $this->logQueueSendResult(
+                'ALERT',
+                $invoice->getInvoiceId() . ' queue send failure',
+                ['invoice_id' => $invoice->getInvoiceId()],
+                [
+                    'aws_exception' => [
+                        'message' => $e->getMessage(),
+                        'extra' => $e->toArray()
+                    ]
+                ]
+            );
             $this->throwQueueSendException($e);
         }
     }
@@ -288,5 +303,20 @@ class SqsQueue
         }
 
         throw new QueueSendException($msg);
+    }
+
+    //private function
+
+    private function logQueueSendResult(string $level, string $message, array $context, array $extra = []): void
+    {
+        $this->logger->log(
+            $level,
+            $message,
+            array_merge(
+                $context,
+                ['queue_name' =>$this->getQueueName()],
+                $extra
+            )
+        );
     }
 }

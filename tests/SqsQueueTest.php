@@ -10,6 +10,7 @@ use Serato\InvoiceQueue\InvoiceValidator;
 use Aws\Result;
 use Aws\Exception\AwsException;
 use Aws\Sqs\Exception\SqsException;
+use Exception;
 
 class SqsQueueTest extends AbstractTestCase
 {
@@ -78,6 +79,12 @@ class SqsQueueTest extends AbstractTestCase
         
         $this->assertEquals($messageId, $sqsQueue->sendInvoice($invoice, $validator));
         $this->assertEquals(0, $this->getAwsMockHandlerStackCount());
+
+        # Ensure that a log entry is created
+        $log = $this->getLogFileContents();
+
+        $this->assertTrue($log !== '');
+        $this->assertTrue(strpos($log, '.INFO:') !== false);
     }
 
     /**
@@ -104,6 +111,42 @@ class SqsQueueTest extends AbstractTestCase
 
         $sqsQueue = $this->getSqsQueueInstance($results);
         $sqsQueue->sendInvoice($invoice, $validator);
+    }
+
+    /**
+     * Tests the SqsQueue::sendInvoice method with a valid Invoice and an unsuccessful SQS API call
+     *
+     * Ensure that a log entry is created
+     *
+     * @dataProvider sendInvoiceProvider
+     */
+    public function testSendInvoiceValidInvoiceUnsuccessfulDeliveryLogEntry($validator)
+    {
+        $invoice = Invoice::load($this->getValidInvoiceData(), new InvoiceValidator);
+
+        $sqsClient = $this->getMockedAwsSdk()->createSqs(['version' => '2012-11-05']);
+        $cmd = $sqsClient->getCommand('SendMessage', [
+            'QueueName' => 'my-queue-name'
+        ]);
+
+        $results = [
+            # Result for GetQueueUrl command
+            new Result(['QueueUrl'  => 'my-queue-url']),
+            # Result for SendMessage command
+            new AwsException('Exception message', $cmd)
+        ];
+
+        $sqsQueue = $this->getSqsQueueInstance($results);
+        try {
+            $sqsQueue->sendInvoice($invoice, $validator);
+        } catch (Exception $e) {
+            # Ignore
+        }
+
+        $log = $this->getLogFileContents();
+
+        $this->assertTrue($log !== '');
+        $this->assertTrue(strpos($log, '.ALERT:') !== false);
     }
 
     /**
@@ -217,8 +260,7 @@ class SqsQueueTest extends AbstractTestCase
         return new SqsQueue(
             $this->getMockedAwsSdk($results)->createSqs(['version' => '2012-11-05']),
             'test',
-            $this->getLogger(),
-            'PHPUnit'
+            $this->getLogger()
         );
     }
 

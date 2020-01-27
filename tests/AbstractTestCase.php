@@ -56,6 +56,12 @@ abstract class AbstractTestCase extends TestCase
         return $this->logFilePath;
     }
 
+    protected function getLogFileContents(): string
+    {
+        $log = file_get_contents($this->getLogFilePath());
+        return $log === false ? '' : $log;
+    }
+
     /**
      * @param array $mockResults    An array of mock results to return from SDK clients
      * @return Sdk

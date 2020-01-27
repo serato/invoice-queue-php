@@ -165,19 +165,24 @@ or in batches, and create queues if they don't currently exist.
 use Aws\Sdk;
 use Serato\InvoiceQueue\SqsQueue;
 use Monolog\Logger;
+use Serato\InvoiceQueue\MonologLogFormatter;
 
 # Create AWS SQS client instance
 $awsSdk = new Sdk();
 $awsSqsClient->createSqs();
 
-# Create a PSR LogInterface instance
-$logger = new Logger('sqsqueue-log');
+# Create a PSR LogInterface instance.
+# Monolog is recommended. Use in combination with a custom formatter
+# that makes the log entries more legible in Cloudwatch Logs.
+$logger = new Logger('My-App-Logger');
+foreach ($logger->getHandlers() as $handler) {
+    $handler->setFormatter(new MonologLogFormatter());
+}
 
 # Constructor requires:
 # - An AWS SQS client
 # - Environment string (one of 'test' or 'production')
 # - PSR LogInterface
-# - Host application name (for logging purposes)
 $queue = new SqsQueue($awsSqsClient, 'test', $logger, 'My App');
 
 # Get the queue name or URL of the underlying SQS queue
