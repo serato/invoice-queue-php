@@ -173,9 +173,12 @@ $awsSqsClient->createSqs();
 # Create a PSR LogInterface instance
 $logger = new Logger('sqsqueue-log');
 
-# Constructor requires an AWS SQS client, PSR LogInterface and an
-# environment string (one of 'test' or 'production')
-$queue = new SqsQueue($awsSqsClient, 'test', $logger);
+# Constructor requires:
+# - An AWS SQS client
+# - Environment string (one of 'test' or 'production')
+# - PSR LogInterface
+# - Host application name (for logging purposes)
+$queue = new SqsQueue($awsSqsClient, 'test', $logger, 'My App');
 
 # Get the queue name or URL of the underlying SQS queue
 $queue->getQueueUrl();

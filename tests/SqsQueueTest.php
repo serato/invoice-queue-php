@@ -217,7 +217,8 @@ class SqsQueueTest extends AbstractTestCase
         return new SqsQueue(
             $this->getMockedAwsSdk($results)->createSqs(['version' => '2012-11-05']),
             'test',
-            $this->getLogger()
+            $this->getLogger(),
+            'PHPUnit'
         );
     }
 

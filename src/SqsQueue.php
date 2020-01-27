@@ -28,25 +28,37 @@ class SqsQueue
     private $logger;
 
     /** @var string */
+    private $hostAppName;
+
+    /** @var string */
     private $queueName;
 
     /** @var string */
     private $queueUrl;
 
     /** @var array */
-    private $messageBatch = [];
+    private $messageBatch = [
+        'invoices' => [],
+        'sqsParams' => []
+    ];
 
     /**
      * Constructs the object
      *
-     * @param SqsClient         $sqsClient  A SqsClient instance from the AWS SDK
-     * @param string            $queueEnv   One of `test` or `production`
-     * @param LoggerInterface   $logger     PSR logger interface instance
+     * @param SqsClient         $sqsClient      A SqsClient instance from the AWS SDK
+     * @param string            $queueEnv       One of `test` or `production`
+     * @param LoggerInterface   $logger         PSR logger interface instance
+     * @param string            $hostAppName    Host application name (for logging purposes)
      */
-    public function __construct(SqsClient $sqsClient, string $queueEnv, LoggerInterface $logger)
-    {
+    public function __construct(
+        SqsClient $sqsClient,
+        string $queueEnv,
+        LoggerInterface $logger,
+        string $hostAppName
+    ) {
         $this->sqsClient = $sqsClient;
         $this->logger = $logger;
+        $this->hostAppName = $hostAppName;
         if ($queueEnv !== 'test' && $queueEnv !== 'production') {
             throw new Exception(
                 "Invalid `queueEnv` value '" . $queueEnv . "'. Valid values are 'test' or 'production'"
@@ -98,10 +110,14 @@ class SqsQueue
         if (!$validator->validateArray($invoice->getData())) {
             throw new ValidationException($validator->getErrors());
         }
-        if (count($this->messageBatch) === self::SEND_BATCH_SIZE) {
+        if (count($this->messageBatch['invoices']) === self::SEND_BATCH_SIZE) {
             $this->sendMessageBatch();
         }
-        $this->messageBatch[] = $this->invoiceToSqsSendParams($invoice, (string)count($this->messageBatch));
+        $this->messageBatch['invoices'][] = $invoice;
+        $this->messageBatch['sqsParams'][] = $this->invoiceToSqsSendParams(
+            $invoice,
+            (string)count($this->messageBatch)
+        );
         return $this;
     }
 
@@ -224,20 +240,26 @@ class SqsQueue
      */
     private function sendMessageBatch(): ?Result
     {
-        if (count($this->messageBatch) > 0) {
+        if (count($this->messageBatch['invoices']) > 0) {
             try {
                 $result = $this->getSqsClient()->sendMessageBatch([
-                    'Entries'   => $this->messageBatch,
+                    'Entries'   => $this->messageBatch['sqsParams'],
                     'QueueUrl'  => $this->getQueueUrl()
                 ]);
-                $this->messageBatch = [];
                 return $result;
             } catch (AwsException $e) {
                 $this->throwQueueSendException($e);
             }
+            # Reset the batch even in event of a failure otherwise we'll
+            # keep retrying indefinitely.
+            $this->messageBatch = [
+                'invoices' => [],
+                'sqsParams' => []
+            ];
         }
         return null;
     }
+
     /**
      * Throws a `QueueSendException` exception in response to catching an
      * `AwsException` exception.
