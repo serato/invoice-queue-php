@@ -137,9 +137,23 @@ class Invoice extends AbstractDataContainer
         parent::setData($data);
         if (isset($data['items'])) {
             foreach ($data['items'] as $item) {
-                $this->items[] = InvoiceItem::load($item, $this->validator);
+                $this->items[] = $this->createInvoiceItemFromData($item);
             }
         }
+    }
+
+    /**
+     * Creates an InvoiceItem from source data.
+     *
+     * Provided as a separate method so that it can be overridden in child classes that may
+     * choose to use inherited InvoiceItem classes
+     *
+     * @param array $data
+     * @return mixed
+     */
+    protected function createInvoiceItemFromData(array $data)
+    {
+        return InvoiceItem::load($data, $this->validator);
     }
 
     /**
