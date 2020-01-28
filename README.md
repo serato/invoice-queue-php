@@ -166,6 +166,7 @@ use Aws\Sdk;
 use Serato\InvoiceQueue\SqsQueue;
 use Monolog\Logger;
 use Serato\InvoiceQueue\MonologLogFormatter;
+use Serato\InvoiceQueue\InvoiceValidator;
 
 # Create AWS SQS client instance
 $awsSdk = new Sdk();
@@ -189,13 +190,15 @@ $queue = new SqsQueue($awsSqsClient, 'test', $logger, 'My App');
 $queue->getQueueUrl();
 $queue->getQueueName();
 
-# Send an individual Invoice instance to the queue
+# *** Send a single Invoice to the queue ***
+
 # Invoice data will be validated against the JSON schema
 $invoice = Invoice::create();
 // ... populate $invoice
 $messageId = $queue->sendInvoice($invoice);
 
-# Send multiple invoices as a batch
+# *** Send multiple Invoices to the queue in batches ***
+
 # Invoice data will be validated against the JSON schema
 # Batch will sent when interal batch size limit is reached or when
 # SqsQueue instance is destroyed
@@ -204,7 +207,23 @@ $invoice1 = Invoice::create();
 $invoice2 = Invoice::create();
 // ... populate $invoice2
 
+# You MUST provide a InvoiceValidator when calling SqsQueue::sendInvoiceToBatch
+$validator = new InvoiceValidator;
+
 $queue
-  ->sendInvoiceToBatch($invoice1)
-  ->sendInvoiceToBatch($invoice2);
+  ->sendInvoiceToBatch($invoice1, $validator)
+  ->sendInvoiceToBatch($invoice2, $validator);
+
+# A callback can be provided to the SqsQueue. This callback is called after every
+# batch is sent to SQS.
+#
+# The callback as takes two arguments:
+#
+# - array $successfulInvoices      An array of Serato\InvoiceQueue\Invoice
+#                                  instances that were successfully delivered to SQS.
+# - array $failedInvoices          An array of Serato\InvoiceQueue\Invoice
+#                                  instances that failed to deliver to SQS.
+$queue->setOnSendMessageBatchCallback(function ($successfulInvoices, $failedInvoices ) {
+  // Process invoices based on success or otherwise
+})
 ```

@@ -306,6 +306,49 @@ class SqsQueueTest extends AbstractTestCase
         $this->assertEquals(0, $this->getAwsMockHandlerStackCount());
     }
 
+    /**
+     * Tests the SqsQueue onSendMessageBatch behaviour
+     */
+    public function testSendInvoiceToBatchOnSendMessageBatchCallable()
+    {
+        $validator = new InvoiceValidator;
+        $successInvoice = Invoice::load($this->getValidInvoiceData()[0], $validator);
+        $failedInvoice = Invoice::load($this->getValidInvoiceData()[1], $validator);
+
+        $results = [
+            # Result for GetQueueUrl command
+            new Result(['QueueUrl'  => 'my-queue-url']),
+            # Result for SendMessageBatch command for first batch of 10
+            new Result([
+                'Successful' => [0 => ['Id' => $successInvoice->getInvoiceId()]],
+                'Failed' => [0 => ['Id' => $failedInvoice->getInvoiceId()]]
+            ])
+        ];
+
+        $sqsQueue = $this->getSqsQueueInstance($results);
+
+        # Use SqsQueueCallbackTester to test the callback
+        $callbackTester = new SqsQueueCallbackTester;
+        $sqsQueue->setOnSendMessageBatchCallback($callbackTester);
+
+        $sqsQueue
+            ->sendInvoiceToBatch($successInvoice, $validator)
+            ->sendInvoiceToBatch($failedInvoice, $validator);
+        
+        # Destroy the object. This should trigger the final batch send.
+        unset($sqsQueue);
+
+        # Confirm that the successful and failed invoices were passed to the
+        # SqsQueueCallbackTester instance
+        $this->assertEquals(1, count($callbackTester->successfulInvoices));
+        $this->assertEquals($successInvoice, $callbackTester->successfulInvoices[0]);
+        $this->assertEquals(1, count($callbackTester->failedInvoices));
+        $this->assertEquals($failedInvoice, $callbackTester->failedInvoices[0]);
+
+        # Confirm the stack is empty (ie. that the API calls HAVE been made)
+        $this->assertEquals(0, $this->getAwsMockHandlerStackCount());
+    }
+
     private function getSqsQueueInstance(array $results = []): SqsQueue
     {
         return new SqsQueue(

@@ -39,6 +39,9 @@ class SqsQueue
         'sqsParams' => []
     ];
 
+    /** @var callable */
+    private $onSendMessageBatch;
+
     /**
      * Constructs the object
      *
@@ -220,6 +223,28 @@ class SqsQueue
     }
 
     /**
+     * Sets a callable to be invoked whenever a batch of invoice messages are sent to
+     * SQS via the sendMessageBatch method.
+     *
+     * Any function or class method that implements the Callable interface can be provided.
+     *
+     * The callable is passed two arguments:
+     *
+     * - array $successfulInvoices      An array of Serato\InvoiceQueue\Invoice instances that were
+     *                                  successfully delivered to SQS.
+     * - array $failedInvoices          An array of Serato\InvoiceQueue\Invoice instances that failed
+     *                                  to deliver to SQS.
+     *
+     * @param callable $callable
+     * @return self
+     */
+    public function setOnSendMessageBatchCallback(callable $callable): self
+    {
+        $this->onSendMessageBatch = $callable;
+        return $this;
+    }
+
+    /**
      * Converts an Invoice into a param array suitable for sending to an SQS queue.
      *
      * @param Invoice   $invoice
@@ -261,14 +286,17 @@ class SqsQueue
     {
         if (count($this->messageBatch['invoices']) > 0) {
             try {
+                $success = [];
+                $failure = [];
                 $result = $this->getSqsClient()->sendMessageBatch([
                     'Entries'   => $this->messageBatch['sqsParams'],
                     'QueueUrl'  => $this->getQueueUrl()
                 ]);
-                # Create 1 log entry per invoice in the batch
                 if (isset($result['Successful'])) {
+                    # Create 1 log entry per invoice in the batch
                     foreach ($result['Successful'] as $resultData) {
                         $invoice = $this->messageBatch['invoices'][$resultData['Id']];
+                        $success[] = $invoice;
                         $this->logQueueSendResult(
                             'INFO',
                             $invoice->getInvoiceId() . ' SQS sendMessageBatch success',
@@ -281,8 +309,10 @@ class SqsQueue
                     }
                 }
                 if (isset($result['Failed'])) {
+                    # Create 1 log entry per invoice in the batch
                     foreach ($result['Failed'] as $resultData) {
                         $invoice = $this->messageBatch['invoices'][$resultData['Id']];
+                        $failure[] = $invoice;
                         $this->logQueueSendResult(
                             'ALERT',
                             $invoice->getInvoiceId() . ' SQS sendMessageBatch failure',
@@ -293,6 +323,9 @@ class SqsQueue
                             ['aws_result' => $resultData]
                         );
                     }
+                }
+                if ($this->onSendMessageBatch !== null && is_callable($this->onSendMessageBatch)) {
+                    call_user_func($this->onSendMessageBatch, $success, $failure);
                 }
                 return $result;
             } catch (AwsException $e) {
