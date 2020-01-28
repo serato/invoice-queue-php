@@ -1,19 +1,19 @@
 {
-    "name": "serato/invoice-queue",
-    "homepage": "https://github.com/serato/serato-sendgrid",
+    "name": "serato/sqs-invoice-queue",
+    "homepage": "https://github.com/serato/invoice-queue-php",
     "description": "A library for interacting with an SQS message queue that holds invoice data.",
     "type": "library",
     "require": {
         "php" : ">=7.1",
 		"aws/aws-sdk-php": "^3.0.0",
         "justinrainbow/json-schema": "^5.0.0",
-        "psr/log": "^1.0.0"
+        "psr/log": "^1.0.0",
+        "monolog/monolog": "^1.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~7.0",
         "phpstan/phpstan-phpunit": "^0.11.0",
-        "squizlabs/php_codesniffer": "~2.0",
-        "monolog/monolog": "^1.0.0"
+        "squizlabs/php_codesniffer": "~2.0"
     },
     "autoload": {
         "psr-4": {
