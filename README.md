@@ -71,7 +71,6 @@ use Serato\InvoiceQueue\InvoiceValidator;
 $validator = new Serato\InvoiceQueue\InvoiceValidator;
 
 # Validate an array against the root schema.
-
 if ($validator->validateArray(['my' => 'data'])) {
   // Data conforms to schema
 } else {
@@ -82,7 +81,6 @@ if ($validator->validateArray(['my' => 'data'])) {
 }
 
 # Validate a string against an named definition within the JSON schema
-
 if ($validator->validateJsonString('{"my":"data"}', 'line_item')) {
   // Data conforms to schema
 } else {
@@ -104,36 +102,54 @@ that conforms to the [invoice JSON schema](./resources/invoice_schema.json).
 ```php
 use Serato\InvoiceQueue\Invoice;
 
-$invoice = new Invoice;
+# Constructor is private.
+# Always create using Invoice::create() static method
+$invoice = Invoice::create();
 
 # Set individual properties
-
 $invoice
   ->setInvoiceId('MyInvoiceId')
   ->setCurrency('EUR')
   ->setBillingAddressCompanyName('Acme Inc');
-# ...etc
+// ...etc
 
 # Get individual properties
-
 echo $invoice->getInvoiceId();
 echo $invoice->getCurrency();
 echo $invoice->getBillingAddressCompanyName();
-# ...etc
+// ...etc
 
-# Add a line item
+# Create an Invoice Item
+use Serato\InvoiceQueue\InvoiceItem;
 
-$invoice->addItem('MySkuCode', 2, 2000, 0, 2000, 1000, 'Z');
+$item = InvoiceItem::create();
+$item
+  ->setSku('MySkuCode')
+  ->setQuantity(1)
+  ->setAmountGross(2000)
+  ->setAmountTax(0)
+  ->setAmountNet(1000)
+  ->setUnitPrice(1000)
+  ->setTaxCode('V');
+
+# Add the Item to an Invoice
+$invoice->addItem($item);
+
+# Gets all items in invoice (returns an array of InvoiceItem objects)
+$invoice->getItems();
 
 # Get complete invoice data that conforms to JSON schema
-
 $data = $invoice->getData();
 
 # Use the `Invoice::load` static method to populate model with data
 # (the data will be validated against the JSON schema)
+$invoice = Invoice::load($data);
 
+# If loading multiple invoices, create a single InvoiceValidator
+# instance and pass it to `Invoice::load` for better performance.
 $validator = new Serato\InvoiceQueue\InvoiceValidator;
-$invoice = Invoice::load($data, $validator);
+$invoice1 = Invoice::load($data1, $validator);
+$invoice2 = Invoice::load($data2, $validator);
 
 ```
 
@@ -148,40 +164,67 @@ or in batches, and create queues if they don't currently exist.
 ```php
 use Aws\Sdk;
 use Serato\InvoiceQueue\SqsQueue;
+use Monolog\Logger;
+use Serato\InvoiceQueue\MonologLogFormatter;
+use Serato\InvoiceQueue\InvoiceValidator;
 
 # Create AWS SQS client instance
-
 $awsSdk = new Sdk();
 $awsSqsClient->createSqs();
 
-# Constructor requires an AWS SQS client and an environment string
-# (one of 'test' or 'production')
+# Create a PSR LogInterface instance.
+# Monolog is recommended. Use in combination with a custom formatter
+# that makes the log entries more legible in Cloudwatch Logs.
+$logger = new Logger('My-App-Logger');
+foreach ($logger->getHandlers() as $handler) {
+    $handler->setFormatter(new MonologLogFormatter());
+}
 
-$queue = new SqsQueue($awsSqsClient, 'test');
+# Constructor requires:
+# - An AWS SQS client
+# - Environment string (one of 'test' or 'production')
+# - PSR LogInterface
+$queue = new SqsQueue($awsSqsClient, 'test', $logger, 'My App');
 
 # Get the queue name or URL of the underlying SQS queue
-
 $queue->getQueueUrl();
 $queue->getQueueName();
 
-# Send an individual Invoice instance to the queue
-# Invoice data will be validated against the JSON schema
+# *** Send a single Invoice to the queue ***
 
-$invoice = new Invoice;
+# Invoice data will be validated against the JSON schema
+$invoice = Invoice::create();
 // ... populate $invoice
 $messageId = $queue->sendInvoice($invoice);
 
-# Send multiple invoices as a batch
+# *** Send multiple Invoices to the queue in batches ***
+
 # Invoice data will be validated against the JSON schema
 # Batch will sent when interal batch size limit is reached or when
 # SqsQueue instance is destroyed
-
-$invoice1 = new Invoice;
+$invoice1 = Invoice::create();
 // ... populate $invoice1
-$invoice2 = new Invoice;
+$invoice2 = Invoice::create();
 // ... populate $invoice2
 
+# You MUST provide a InvoiceValidator when calling SqsQueue::sendInvoiceToBatch
+$validator = new InvoiceValidator;
+
 $queue
-  ->sendInvoiceToBatch($invoice1)
-  ->sendInvoiceToBatch($invoice2);
+  ->sendInvoiceToBatch($invoice1, $validator)
+  ->sendInvoiceToBatch($invoice2, $validator);
+
+# A callback can be provided to the SqsQueue. This callback is called after every
+# batch is sent to SQS.
+#
+# The callback as takes two arguments:
+#
+# - array $successfulInvoices      An array of Serato\InvoiceQueue\Invoice
+#                                  instances that were successfully delivered to SQS.
+# - array $failedInvoices          An array of Serato\InvoiceQueue\Invoice
+#                                  instances that failed to deliver to SQS.
+
+$queue->setOnSendMessageBatchCallback(function ($successfulInvoices, $failedInvoices ) {
+  // Process invoices based on success or otherwise
+});
 ```

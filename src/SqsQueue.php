@@ -9,6 +9,7 @@ use Aws\Exception\AwsException;
 use Aws\Sqs\Exception\SqsException;
 use Serato\InvoiceQueue\Exception\ValidationException;
 use Serato\InvoiceQueue\Exception\QueueSendException;
+use Psr\Log\LoggerInterface;
 use Exception;
 
 /**
@@ -23,6 +24,9 @@ class SqsQueue
     /** @var SqsClient */
     private $sqsClient;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     /** @var string */
     private $queueName;
 
@@ -30,22 +34,34 @@ class SqsQueue
     private $queueUrl;
 
     /** @var array */
-    private $messageBatch = [];
+    private $messageBatch = [
+        'invoices' => [],
+        'sqsParams' => []
+    ];
+
+    /** @var callable */
+    private $onSendMessageBatch;
 
     /**
      * Constructs the object
      *
-     * @param SqsClient $sqsClient  A SqsClient instance from the AWS SDK
-     * @param string $queueEnv      One of `test` or `production`
+     * @param SqsClient         $sqsClient      A SqsClient instance from the AWS SDK
+     * @param string            $queueEnv       One of `test` or `production`
+     * @param LoggerInterface   $logger         PSR logger interface instance
      */
-    public function __construct(SqsClient $sqsClient, string $queueEnv)
-    {
+    public function __construct(
+        SqsClient $sqsClient,
+        string $queueEnv,
+        LoggerInterface $logger
+    ) {
         $this->sqsClient = $sqsClient;
+        $this->logger = $logger;
         if ($queueEnv !== 'test' && $queueEnv !== 'production') {
             throw new Exception(
                 "Invalid `queueEnv` value '" . $queueEnv . "'. Valid values are 'test' or 'production'"
             );
         }
+
         # FIFO queue names MUST end in ".fifo"
         $this->queueName = 'InvoiceData-' . $queueEnv . '.fifo';
     }
@@ -73,8 +89,32 @@ class SqsQueue
         }
         try {
             $result = $this->getSqsClient()->sendMessage($this->invoiceToSqsSendParams($invoice));
+            $this->logQueueSendResult(
+                'INFO',
+                $invoice->getInvoiceId() . ' SQS sendMessage success',
+                [
+                    'invoice_id' => $invoice->getInvoiceId(),
+                    'sqs_message_id' => $result['MessageId'],
+                    'caller' => __METHOD__
+                ],
+                ['aws_result' => $result->toArray()]
+            );
             return $result['MessageId'];
         } catch (AwsException $e) {
+            $this->logQueueSendResult(
+                'ALERT',
+                $invoice->getInvoiceId() . ' SQS sendMessage failure',
+                [
+                    'invoice_id' => $invoice->getInvoiceId(),
+                    'caller' => __METHOD__
+                ],
+                [
+                    'aws_exception' => [
+                        'message' => $e->getMessage(),
+                        'extra' => $e->toArray()
+                    ]
+                ]
+            );
             $this->throwQueueSendException($e);
         }
     }
@@ -92,10 +132,14 @@ class SqsQueue
         if (!$validator->validateArray($invoice->getData())) {
             throw new ValidationException($validator->getErrors());
         }
-        if (count($this->messageBatch) === self::SEND_BATCH_SIZE) {
+        if (count($this->messageBatch['invoices']) === self::SEND_BATCH_SIZE) {
             $this->sendMessageBatch();
         }
-        $this->messageBatch[] = $this->invoiceToSqsSendParams($invoice, (string)count($this->messageBatch));
+        $this->messageBatch['invoices'][$invoice->getInvoiceId()] = $invoice;
+        $this->messageBatch['sqsParams'][] = $this->invoiceToSqsSendParams(
+            $invoice,
+            $invoice->getInvoiceId()
+        );
         return $this;
     }
 
@@ -179,6 +223,28 @@ class SqsQueue
     }
 
     /**
+     * Sets a callable to be invoked whenever a batch of invoice messages are sent to
+     * SQS via the sendMessageBatch method.
+     *
+     * Any function or class method that implements the Callable interface can be provided.
+     *
+     * The callable is passed two arguments:
+     *
+     * - array $successfulInvoices      An array of Serato\InvoiceQueue\Invoice instances that were
+     *                                  successfully delivered to SQS.
+     * - array $failedInvoices          An array of Serato\InvoiceQueue\Invoice instances that failed
+     *                                  to deliver to SQS.
+     *
+     * @param callable $callable
+     * @return self
+     */
+    public function setOnSendMessageBatchCallback(callable $callable): self
+    {
+        $this->onSendMessageBatch = $callable;
+        return $this;
+    }
+
+    /**
      * Converts an Invoice into a param array suitable for sending to an SQS queue.
      *
      * @param Invoice   $invoice
@@ -218,20 +284,80 @@ class SqsQueue
      */
     private function sendMessageBatch(): ?Result
     {
-        if (count($this->messageBatch) > 0) {
+        if (count($this->messageBatch['invoices']) > 0) {
             try {
+                $success = [];
+                $failure = [];
                 $result = $this->getSqsClient()->sendMessageBatch([
-                    'Entries'   => $this->messageBatch,
+                    'Entries'   => $this->messageBatch['sqsParams'],
                     'QueueUrl'  => $this->getQueueUrl()
                 ]);
-                $this->messageBatch = [];
+                if (isset($result['Successful'])) {
+                    # Create 1 log entry per invoice in the batch
+                    foreach ($result['Successful'] as $resultData) {
+                        $invoice = $this->messageBatch['invoices'][$resultData['Id']];
+                        $success[] = $invoice;
+                        $this->logQueueSendResult(
+                            'INFO',
+                            $invoice->getInvoiceId() . ' SQS sendMessageBatch success',
+                            [
+                                'invoice_id' => $invoice->getInvoiceId(),
+                                'caller' => __METHOD__
+                            ],
+                            ['aws_result' => $resultData]
+                        );
+                    }
+                }
+                if (isset($result['Failed'])) {
+                    # Create 1 log entry per invoice in the batch
+                    foreach ($result['Failed'] as $resultData) {
+                        $invoice = $this->messageBatch['invoices'][$resultData['Id']];
+                        $failure[] = $invoice;
+                        $this->logQueueSendResult(
+                            'ALERT',
+                            $invoice->getInvoiceId() . ' SQS sendMessageBatch failure',
+                            [
+                                'invoice_id' => $invoice->getInvoiceId(),
+                                'caller' => __METHOD__
+                            ],
+                            ['aws_result' => $resultData]
+                        );
+                    }
+                }
+                if ($this->onSendMessageBatch !== null && is_callable($this->onSendMessageBatch)) {
+                    call_user_func($this->onSendMessageBatch, $success, $failure);
+                }
                 return $result;
             } catch (AwsException $e) {
+                # The entire batch failed :-(
+                foreach ($this->messageBatch['invoices'] as $invoiceId => $invoice) {
+                    $this->logQueueSendResult(
+                        'ALERT',
+                        $invoice->getInvoiceId() . ' SQS sendMessageBatch failure',
+                        [
+                            'invoice_id' => $invoice->getInvoiceId(),
+                            'caller' => __METHOD__
+                        ],
+                        [
+                            'aws_exception' => [
+                                'message' => $e->getMessage(),
+                                'extra' => $e->toArray()
+                            ]
+                        ]
+                    );
+                }
                 $this->throwQueueSendException($e);
             }
+            # Reset the batch even in event of a failure otherwise we'll
+            # keep retrying indefinitely.
+            $this->messageBatch = [
+                'invoices' => [],
+                'sqsParams' => []
+            ];
         }
         return null;
     }
+
     /**
      * Throws a `QueueSendException` exception in response to catching an
      * `AwsException` exception.
@@ -260,5 +386,18 @@ class SqsQueue
         }
 
         throw new QueueSendException($msg);
+    }
+
+    private function logQueueSendResult(string $level, string $message, array $context, array $extra = []): void
+    {
+        $this->logger->log(
+            $level,
+            $message,
+            array_merge(
+                $context,
+                ['queue_name' =>$this->getQueueName()],
+                $extra
+            )
+        );
     }
 }

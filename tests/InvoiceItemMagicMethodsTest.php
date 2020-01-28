@@ -4,22 +4,22 @@ declare(strict_types=1);
 namespace Serato\InvoiceQueue\Test;
 
 use Serato\InvoiceQueue\Test\AbstractTestCase;
-use Serato\InvoiceQueue\Invoice;
+use Serato\InvoiceQueue\InvoiceItem;
 use Serato\InvoiceQueue\InvoiceValidator;
 use ReflectionMethod;
 
 /**
- * Tests the magic methods implemented in Serato\InvoiceQueue\Invoice
+ * Tests the magic methods implemented in Serato\InvoiceQueue\InvoiceItem
  *
  * Note: this class is NOT analysed by phpstan because it purposefully tests
  * methods that don't exist and or uses method signatures incorrectly.
  * phpstan, by design, will fail these method calls.
  *
  * Any unit tests for Serato\InvoiceQueue\Invoice that SHOULD be anyalsed by
- * phpstan should be created in the Serato\InvoiceQueue\Test\InvoiceTest
+ * phpstan should be created in the Serato\InvoiceQueue\Test\InvoiceItemTest
  * test case.
  */
-class InvoiceMagicMethodsTest extends AbstractTestCase
+class InvoiceItemMagicMethodsTest extends AbstractTestCase
 {
     /**
      * Tests the magic get and set methods
@@ -28,7 +28,7 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      * @param string $dataType
      * @return void
      *
-     * @dataProvider invoiceDataPropsProvider
+     * @dataProvider invoiceItemDataPropsProvider
      */
     public function testMagicGetSetMethods(string $propName, string $dataType)
     {
@@ -40,14 +40,14 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
         $setMethodName = 'set' . $baseMethodName;
         $getMethodName = 'get' . $baseMethodName;
 
-        $invoice = Invoice::create();
-        $invoice->$setMethodName($val);
-        $this->assertEquals($val, $invoice->$getMethodName());
+        $invoiceItem = InvoiceItem::create();
+        $invoiceItem->$setMethodName($val);
+        $this->assertEquals($val, $invoiceItem->$getMethodName());
     }
 
-    public function invoiceDataPropsProvider(): array
+    public function invoiceItemDataPropsProvider(): array
     {
-        $getDataKeysMethod = new ReflectionMethod('\Serato\InvoiceQueue\Invoice', 'getDataKeys');
+        $getDataKeysMethod = new ReflectionMethod('\Serato\InvoiceQueue\InvoiceItem', 'getDataKeys');
         $getDataKeysMethod->setAccessible(true);
 
         $data = [];
@@ -62,8 +62,8 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testInvalidMethodName()
     {
-        $invoice = Invoice::create();
-        $invoice->noSuchMethod();
+        $invoiceItem = InvoiceItem::create();
+        $invoiceItem->noSuchMethod();
     }
 
     /**
@@ -71,8 +71,8 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testInvalidGetMethodName()
     {
-        $invoice = Invoice::create();
-        $invoice->getNoSuchMethod();
+        $invoiceItem = InvoiceItem::create();
+        $invoiceItem->getNoSuchMethod();
     }
 
     /**
@@ -80,8 +80,8 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testInvalidSetMethodName()
     {
-        $invoice = Invoice::create();
-        $invoice->setNoSuchMethod('val');
+        $invoiceItem = InvoiceItem::create();
+        $invoiceItem->setNoSuchMethod('val');
     }
 
     /**
@@ -91,8 +91,8 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testInvalidGetMethodArgs()
     {
-        $invoice = Invoice::create();
-        $invoice->getSource('val');
+        $invoiceItem = InvoiceItem::create();
+        $invoiceItem->getSku('val');
     }
 
     /**
@@ -102,8 +102,8 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testInvalidSetMethodArgs1()
     {
-        $invoice = Invoice::create();
-        $invoice->setSource();
+        $invoiceItem = InvoiceItem::create();
+        $invoiceItem->setSku();
     }
 
     /**
@@ -113,8 +113,8 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testInvalidSetMethodArgs2()
     {
-        $invoice = Invoice::create();
-        $invoice->setSource('val', 'val');
+        $invoiceItem = InvoiceItem::create();
+        $invoiceItem->setSku('val', 'val');
     }
 
     /**
@@ -124,8 +124,8 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testInvalidSetMethodArgType()
     {
-        $invoice = Invoice::create();
-        $invoice->setSource(0);
+        $invoiceItem = InvoiceItem::create();
+        $invoiceItem->setSku(0);
     }
 
     /**
@@ -133,7 +133,7 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
      */
     public function testGetMethodNullDefaultValue()
     {
-        $invoice = Invoice::create();
-        $this->assertEquals(null, $invoice->getSource());
+        $invoiceItem = InvoiceItem::create();
+        $this->assertEquals(null, $invoiceItem->getSku());
     }
 }

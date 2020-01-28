@@ -7,3 +7,4 @@ parameters:
         - vendor/phpstan/phpstan-phpunit/extension.neon
     excludes_analyse:
         - %currentWorkingDirectory%/tests/InvoiceMagicMethodsTest.php
+        - %currentWorkingDirectory%/tests/InvoiceItemMagicMethodsTest.php

@@ -5,66 +5,66 @@ namespace Serato\InvoiceQueue\Test;
 
 use Serato\InvoiceQueue\Test\AbstractTestCase;
 use Serato\InvoiceQueue\Invoice;
+use Serato\InvoiceQueue\InvoiceItem;
 use Serato\InvoiceQueue\InvoiceValidator;
 
 class InvoiceTest extends AbstractTestCase
 {
     /**
-     * Tests the setData method with valid data
+     * Tests the Load method with valid data
      *
      * @return void
      */
-    public function testSetDataWithValidData()
+    public function testLoadWithValidData()
     {
         $validator = new InvoiceValidator;
         $invoice = Invoice::load($this->getValidInvoiceData(), $validator);
         $this->assertEquals($this->getValidInvoiceData(), $invoice->getData());
+        $this->assertEquals(1, count($invoice->getItems()));
     }
 
     /**
-     * Tests the setData method with invalid data
+     * Tests the Load method with invalid data
      *
      * @return void
      * @expectedException \Serato\InvoiceQueue\Exception\ValidationException
      */
-    public function testSetDataWithInvalidData()
+    public function testLoadWithInvalidData()
     {
         $validator = new InvoiceValidator;
         $invoice = Invoice::load($this->getInvalidInvoiceData(), $validator);
     }
 
     /**
-     * Tests the setItem
+     * Tests the addItem
      *
      * @return void
      */
     public function testSetItemMethod()
     {
-        $item = [
-            'sku' => 'SKU1',
-            'quantity' => 1,
-            'amount_gross' => 0,
-            'amount_tax' => 0,
-            'amount_net' => 0,
-            'unit_price' => 0,
-            'tax_code' => 'V'
-        ];
+        $item = InvoiceItem::create();
+        $item
+            ->setSku('SKU1')
+            ->setQuantity(1)
+            ->setAmountGross(200)
+            ->setAmountTax(0)
+            ->setAmountNet(100)
+            ->setUnitPrice(100)
+            ->setTaxCode('V');
 
-        $invoice = new Invoice;
+        $invoice = Invoice::create();
 
-        $invoice->addItem(
-            $item['sku'],
-            $item['quantity'],
-            $item['amount_gross'],
-            $item['amount_tax'],
-            $item['amount_net'],
-            $item['unit_price'],
-            $item['tax_code']
-        );
+        $invoice->addItem($item);
+        $this->assertEquals(1, count($invoice->getItems()));
+        $this->assertEquals($item, $invoice->getItems()[0]);
+
+        $invoice->addItem($item);
+        $this->assertEquals(2, count($invoice->getItems()));
+        $this->assertEquals($item, $invoice->getItems()[1]);
 
         $data = $invoice->getData();
 
-        $this->assertEquals($item, $data['items'][0]);
+        $this->assertEquals(2, count($data['items']));
     }
 
     private function getValidInvoiceData()
