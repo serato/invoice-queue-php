@@ -223,7 +223,8 @@ $queue
 #                                  instances that were successfully delivered to SQS.
 # - array $failedInvoices          An array of Serato\InvoiceQueue\Invoice
 #                                  instances that failed to deliver to SQS.
+
 $queue->setOnSendMessageBatchCallback(function ($successfulInvoices, $failedInvoices ) {
   // Process invoices based on success or otherwise
-})
+});
 ```
