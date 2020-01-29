@@ -31,7 +31,13 @@ class SqsQueue
     private $queueName;
 
     /** @var string */
+    private $deadLetterQueueName;
+
+    /** @var string */
     private $queueUrl;
+
+    /** @var string */
+    private $deadLetterQueueUrl;
 
     /** @var array */
     private $messageBatch = [
@@ -64,6 +70,7 @@ class SqsQueue
 
         # FIFO queue names MUST end in ".fifo"
         $this->queueName = 'InvoiceData-' . $queueEnv . '.fifo';
+        $this->deadLetterQueueName = 'InvoiceData-' . $queueEnv . '-DeadLetter.fifo';
     }
 
     public function __destruct()
@@ -144,42 +151,22 @@ class SqsQueue
     }
 
     /**
-     * Get the SQS queue URL
+     * Get the primary SQS queue URL
      *
      * @return string
      */
     public function getQueueUrl(): string
     {
         if ($this->queueUrl === null) {
-            try {
-                $result = $this->getSqsClient()->getQueueUrl([
-                    'QueueName' => $this->getQueueName()
-                ]);
-                $this->queueUrl = $result['QueueUrl'];
-            } catch (SqsException $e) {
-                if ($e->getAwsErrorCode() === 'AWS.SimpleQueueService.NonExistentQueue') {
-                    #   **********************************************
-                    #   *** The queue doesn't exist. So create it. ***
-                    #   **********************************************
-                    # First, create the dead letter queue
-                    $result = $this->getSqsClient()->createQueue([
-                        'QueueName' => rtrim($this->getQueueName(), '.fifo') . '-DeadLetter.fifo',
-                        'Attributes' => [
-                            'MessageRetentionPeriod' => 1209600, # 14 days (the maximum allowed by SQS)
-                            'VisibilityTimeout' => 180,
-                            'ReceiveMessageWaitTimeSeconds' => 20, # Create queue with long polling enabled
-                            'FifoQueue' => 'true'
-                        ],
-                    ]);
-                    $deadLetterQueueUrl = $result['QueueUrl'];
-                    # Now we need to get the ARN of the dead letter queue
+            $this->queueUrl = $this->getSqsQueueUrl(
+                $this->getQueueName(),
+                function () {
+                    # Get the ARN of the dead letter queue
                     $result = $this->getSqsClient()->getQueueAttributes([
                         'AttributeNames' => ['QueueArn'],
-                        'QueueUrl' => $deadLetterQueueUrl
+                        'QueueUrl' => $this->getDeadLetterQueueUrl()
                     ]);
-                    $deadLetterArn = $result['Attributes']['QueueArn'];
-                    # Create the main queue
-                    $result = $this->getSqsClient()->createQueue([
+                    return [
                         'QueueName' => $this->getQueueName(),
                         'Attributes' => [
                             'MessageRetentionPeriod' => 345600, # 4 days
@@ -188,28 +175,61 @@ class SqsQueue
                             'FifoQueue' => 'true',
                             'ContentBasedDeduplication' => 'true',
                             'RedrivePolicy' => json_encode([
-                                'deadLetterTargetArn' => $deadLetterArn,
+                                'deadLetterTargetArn' => $result['Attributes']['QueueArn'],
                                 'maxReceiveCount' => 5
                             ])
                         ],
-                    ]);
-                    $this->queueUrl = $result['QueueUrl'];
-                } else {
-                    throw $e;
+                    ];
                 }
-            }
+            );
         }
         return $this->queueUrl;
     }
 
     /**
-     * Returns the name of SQS message queue
+     * Get the dead letter SQS queue URL
+     *
+     * @return string
+     */
+    public function getDeadLetterQueueUrl(): string
+    {
+        if ($this->deadLetterQueueUrl === null) {
+            $this->deadLetterQueueUrl = $this->getSqsQueueUrl(
+                $this->getDeadLetterQueueName(),
+                function () {
+                    return [
+                        'QueueName' => $this->getDeadLetterQueueName(),
+                        'Attributes' => [
+                            'MessageRetentionPeriod' => 1209600, # 14 days (the maximum allowed by SQS)
+                            'VisibilityTimeout' => 180,
+                            'ReceiveMessageWaitTimeSeconds' => 20, # Create queue with long polling enabled
+                            'FifoQueue' => 'true'
+                        ]
+                    ];
+                }
+            );
+        }
+        return $this->deadLetterQueueUrl;
+    }
+
+    /**
+     * Returns the name of the primary SQS message queue
      *
      * @return string
      */
     public function getQueueName(): string
     {
         return $this->queueName;
+    }
+
+    /**
+     * Returns the name of the dead letter SQS message queue
+     *
+     * @return string
+     */
+    public function getDeadLetterQueueName(): string
+    {
+        return $this->deadLetterQueueName;
     }
 
     /**
@@ -242,6 +262,34 @@ class SqsQueue
     {
         $this->onSendMessageBatch = $callable;
         return $this;
+    }
+
+    /**
+     * Fetches a queue URL from the SQS service. If the queue does not exist it's created.
+     *
+     * The $createQueueParams parameter is a callable that should return an associative array
+     * of parameters suitable for an SQS::CreateQueue API call.
+     *
+     * @param string $queueName
+     * @param callable $createQueueParams
+     * @return string
+     * @throws SqsException
+     */
+    private function getSqsQueueUrl(string $queueName, callable $createQueueParams): string
+    {
+        try {
+            $result = $this->getSqsClient()->getQueueUrl([
+                'QueueName' => $queueName
+            ]);
+            return $result['QueueUrl'];
+        } catch (SqsException $e) {
+            if ($e->getAwsErrorCode() === 'AWS.SimpleQueueService.NonExistentQueue') {
+                $result = $this->getSqsClient()->createQueue(call_user_func($createQueueParams));
+                return $result['QueueUrl'];
+            } else {
+                throw $e;
+            }
+        }
     }
 
     /**
