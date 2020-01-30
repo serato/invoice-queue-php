@@ -7,15 +7,16 @@ use Serato\InvoiceQueue\Test\AbstractTestCase;
 use Serato\InvoiceQueue\Invoice;
 use Serato\InvoiceQueue\InvoiceItem;
 use Serato\InvoiceQueue\InvoiceValidator;
+use Exception;
 
 class InvoiceTest extends AbstractTestCase
 {
     /**
-     * Tests the Load method with valid data
+     * Tests the Load method with valid array data
      *
      * @return void
      */
-    public function testLoadWithValidData()
+    public function testLoadWithValidArrayData()
     {
         $validator = new InvoiceValidator;
         $invoice = Invoice::load($this->getValidInvoiceData(), $validator);
@@ -24,15 +25,52 @@ class InvoiceTest extends AbstractTestCase
     }
 
     /**
-     * Tests the Load method with invalid data
+     * Tests the Load method with invalid array data
      *
      * @return void
      * @expectedException \Serato\InvoiceQueue\Exception\ValidationException
      */
-    public function testLoadWithInvalidData()
+    public function testLoadWithInvalidArrayData()
     {
         $validator = new InvoiceValidator;
         $invoice = Invoice::load($this->getInvalidInvoiceData(), $validator);
+    }
+
+    /**
+     * Tests the Load method with valid string data
+     *
+     * @return void
+     */
+    public function testLoadWithValidStringData()
+    {
+        $json = json_encode($this->getValidInvoiceData());
+        if ($json === false) {
+            # This won't happen. The check is only here to phpstan happy :-)
+            throw new Exception("Can't JSON encode array");
+        }
+
+        $validator = new InvoiceValidator;
+        $invoice = Invoice::load($json, $validator);
+        $this->assertEquals($this->getValidInvoiceData(), $invoice->getData());
+        $this->assertEquals(1, count($invoice->getItems()));
+    }
+
+    /**
+     * Tests the Load method with invalid string data
+     *
+     * @return void
+     * @expectedException \Serato\InvoiceQueue\Exception\ValidationException
+     */
+    public function testLoadWithInvalidStringData()
+    {
+        $json = json_encode($this->getInvalidInvoiceData());
+        if ($json === false) {
+            # This won't happen. The check is only here to phpstan happy :-)
+            throw new Exception("Can't JSON encode array");
+        }
+
+        $validator = new InvoiceValidator;
+        $invoice = Invoice::load($json, $validator);
     }
 
     /**

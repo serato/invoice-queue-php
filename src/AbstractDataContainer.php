@@ -56,11 +56,11 @@ abstract class AbstractDataContainer
      * Optionally takes a array of data, $data, and InvoiceValidator instance with which to populate
      * the object.
      *
-     * @param array|null $data
+     * @param array|string|null $data
      * @param InvoiceValidator|null $validator
      * @throws ValidationException
      */
-    private function __construct(?array $data = null, ?InvoiceValidator $validator = null)
+    private function __construct($data = null, ?InvoiceValidator $validator = null)
     {
         if ($data === null) {
             $this->setData(static::getBaseData());
@@ -70,10 +70,19 @@ abstract class AbstractDataContainer
             } else {
                 $this->validator = $validator;
             }
-            if ($this->validator->validateArray($data, static::getSchemaDefinition())) {
-                $this->setData($data);
-            } else {
-                throw new ValidationException($this->validator->getErrors());
+            if (is_array($data)) {
+                if ($this->validator->validateArray($data, static::getSchemaDefinition())) {
+                    $this->setData($data);
+                } else {
+                    throw new ValidationException($this->validator->getErrors());
+                }
+            }
+            if (is_string($data)) {
+                if ($this->validator->validateJsonString($data, static::getSchemaDefinition())) {
+                    $this->setData(json_decode($data, true));
+                } else {
+                    throw new ValidationException($this->validator->getErrors());
+                }
             }
         }
     }
@@ -133,11 +142,11 @@ abstract class AbstractDataContainer
     /**
      * Creates an instance from an array.
      *
-     * @param array $data
+     * @param array|string $data
      * @param InvoiceValidator|null $validator
      * @return static
      */
-    final public static function load(array $data, ?InvoiceValidator $validator)
+    final public static function load($data, ?InvoiceValidator $validator)
     {
         return new static($data, $validator);
     }
