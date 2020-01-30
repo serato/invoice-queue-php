@@ -142,6 +142,7 @@ $invoice->getItems();
 $data = $invoice->getData();
 
 # Use the `Invoice::load` static method to populate model with data
+# $data can be an array of string of JSON
 # (the data will be validated against the JSON schema)
 $invoice = Invoice::load($data);
 
