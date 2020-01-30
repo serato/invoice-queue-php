@@ -20,6 +20,10 @@
             "type": "string",
             "description": "The ID of order from the online system to which the invoice is related."
         },
+        "user_id": {
+            "type": "string",
+            "description": "The ID of user who placed the order in the online system."
+        },
         "transaction_reference": {
             "type": "string",
             "description": "A payment provider-specific reference for the transaction associated with the invoice."

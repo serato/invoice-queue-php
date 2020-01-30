@@ -17,6 +17,7 @@ namespace Serato\InvoiceQueue;
  * @method string getInvoiceId()
  * @method string getInvoiceDate()
  * @method string getOrderId()
+ * @method string getUserId()
  * @method string getTransactionReference()
  * @method string getPaymentProvider()
  * @method string getMoneyworksDebtorCode()
@@ -37,6 +38,7 @@ namespace Serato\InvoiceQueue;
  * @method self setInvoiceId(string $invoiceId)
  * @method self setInvoiceDate(string $dateIso8601)
  * @method self setOrderId(string $orderId)
+ * @method self setUserId(string $orderId)
  * @method self setTransactionReference(string $ref)
  * @method self setPaymentProvider(string $ref)
  * @method self setMoneyworksDebtorCode(string $mwDebtorCode)
@@ -69,6 +71,7 @@ class Invoice extends AbstractDataContainer
             'invoice_id'                    => 'string',
             'invoice_date'                  => 'string',
             'order_id'                      => 'string',
+            'user_id'                       => 'string',
             'transaction_reference'         => 'string',
             'payment_provider'              => 'string',
             'moneyworks_debtor_code'        => 'string',
