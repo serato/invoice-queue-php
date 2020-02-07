@@ -75,7 +75,9 @@ class InvoiceValidator
             throw new JsonDecodeException;
         }
 
+        $this->getValidator($definition)->reset();
         $this->getValidator($definition)->validate($obj, $this->getSchemaObject($definition));
+
         return $this->getValidator($definition)->isValid();
     }
 

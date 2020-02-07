@@ -63,4 +63,19 @@ class InvoiceValidatorTest extends AbstractTestCase
         $validator = new InvoiceValidator;
         $validator->validateArray(['fp' => $fp]);
     }
+
+    public function testMultipleUsesOfSingleInstance()
+    {
+        $validator = new InvoiceValidator;
+
+        $fileData = include __DIR__ . '/resources/schema_validation_data/single_instance_test_data.php';
+
+        foreach ($fileData as $invoiceData) {
+            $ref = $invoiceData[0];
+            $isValid = $invoiceData[1];
+            $data = $invoiceData[2];
+            $info = $invoiceData[3];
+            $this->assertEquals($isValid, $validator->validateArray($data, $ref), $info);
+        }
+    }
 }
