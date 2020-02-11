@@ -18,6 +18,6 @@ class MonologLogFormatter extends JsonFormatter
      */
     public function format(array $record): string
     {
-        return "\n\n" . '[' . $record['datetime']->format(DateTime::ATOM) . '] ' . parent::format($record);
+        return '[' . $record['datetime']->format(DateTime::ATOM) . '] ' . parent::format($record);
     }
 }
