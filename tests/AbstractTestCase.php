@@ -7,6 +7,7 @@ use Aws\Sdk;
 use Aws\MockHandler;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Formatter\JsonFormatter;
 use Psr\Log\LoggerInterface;
 use PHPUnit\Framework\TestCase;
 
@@ -42,6 +43,10 @@ abstract class AbstractTestCase extends TestCase
         $this->logFilePath = sys_get_temp_dir() . '/php-unit-log.log';
         $this->logger = new Logger("PHP-Unit-Logger");
         $this->logger->pushHandler(new StreamHandler($this->logFilePath, Logger::DEBUG));
+        // Format log entries as JSON. Makes them easier to parse in our tests :-)
+        foreach ($this->logger->getHandlers() as $handler) {
+            $handler->setFormatter(new JsonFormatter());
+        }
     }
 
     protected function tearDown()
