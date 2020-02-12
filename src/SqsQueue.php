@@ -19,6 +19,12 @@ use Exception;
  */
 class SqsQueue
 {
+    public const LOG_RC_SQS_MESSAGE_INVOICE_SEND_SUCCESS = 1000;
+    public const LOG_RC_SQS_MESSAGE_INVOICE_SEND_EXCEPTION = 1001;
+    public const LOG_RC_SQS_MESSAGE_INVOICE_SENDBATCH_SUCCESS = 1002;
+    public const LOG_RC_SQS_MESSAGE_INVOICE_SENDBATCH_FAILED = 1003;
+    public const LOG_RC_SQS_MESSAGE_INVOICE_SENDBATCH_EXCEPTION = 1004;
+
     public const SEND_BATCH_SIZE = 10;
 
     /** @var SqsClient */
@@ -98,24 +104,23 @@ class SqsQueue
             $result = $this->getSqsClient()->sendMessage($this->invoiceToSqsSendParams($invoice));
             $this->logQueueSendResult(
                 'INFO',
-                $invoice->getInvoiceId() . ' SQS sendMessage success',
+                self::LOG_RC_SQS_MESSAGE_INVOICE_SEND_SUCCESS,
+                '[' . $invoice->getInvoiceId() . '] - SQS message - Send success',
                 [
                     'invoice_id' => $invoice->getInvoiceId(),
-                    'sqs_message_id' => $result['MessageId'],
-                    'caller' => __METHOD__
-                ],
-                ['aws_result' => $result->toArray()]
+                    'caller' => __METHOD__,
+                    'sqs_message_id' => $result['MessageId']
+                ]
             );
             return $result['MessageId'];
         } catch (AwsException $e) {
             $this->logQueueSendResult(
                 'ALERT',
-                $invoice->getInvoiceId() . ' SQS sendMessage failure',
+                self::LOG_RC_SQS_MESSAGE_INVOICE_SEND_EXCEPTION,
+                '[' . $invoice->getInvoiceId() . '] - SQS message - Send failure',
                 [
                     'invoice_id' => $invoice->getInvoiceId(),
-                    'caller' => __METHOD__
-                ],
-                [
+                    'caller' => __METHOD__,
                     'aws_exception' => [
                         'message' => $e->getMessage(),
                         'extra' => $e->toArray()
@@ -347,12 +352,12 @@ class SqsQueue
                         $success[] = $invoice;
                         $this->logQueueSendResult(
                             'INFO',
-                            $invoice->getInvoiceId() . ' SQS sendMessageBatch success',
+                            self::LOG_RC_SQS_MESSAGE_INVOICE_SENDBATCH_SUCCESS,
+                            '[' . $invoice->getInvoiceId() . '] - SQS message - Batch send success',
                             [
                                 'invoice_id' => $invoice->getInvoiceId(),
                                 'caller' => __METHOD__
-                            ],
-                            ['aws_result' => $resultData]
+                            ]
                         );
                     }
                 }
@@ -363,12 +368,13 @@ class SqsQueue
                         $failure[] = $invoice;
                         $this->logQueueSendResult(
                             'ALERT',
-                            $invoice->getInvoiceId() . ' SQS sendMessageBatch failure',
+                            self::LOG_RC_SQS_MESSAGE_INVOICE_SENDBATCH_FAILED,
+                            '[' . $invoice->getInvoiceId() . '] - SQS message - Batch send failure',
                             [
                                 'invoice_id' => $invoice->getInvoiceId(),
-                                'caller' => __METHOD__
-                            ],
-                            ['aws_result' => $resultData]
+                                'caller' => __METHOD__,
+                                'aws_failed_result' => $resultData
+                            ]
                         );
                     }
                 }
@@ -381,12 +387,11 @@ class SqsQueue
                 foreach ($this->messageBatch['invoices'] as $invoiceId => $invoice) {
                     $this->logQueueSendResult(
                         'ALERT',
-                        $invoice->getInvoiceId() . ' SQS sendMessageBatch failure',
+                        self::LOG_RC_SQS_MESSAGE_INVOICE_SENDBATCH_EXCEPTION,
+                        '[' . $invoice->getInvoiceId() . '] - SQS message - Batch send failure',
                         [
                             'invoice_id' => $invoice->getInvoiceId(),
-                            'caller' => __METHOD__
-                        ],
-                        [
+                            'caller' => __METHOD__,
                             'aws_exception' => [
                                 'message' => $e->getMessage(),
                                 'extra' => $e->toArray()
@@ -436,15 +441,15 @@ class SqsQueue
         throw new QueueSendException($msg);
     }
 
-    private function logQueueSendResult(string $level, string $message, array $context, array $extra = []): void
+    private function logQueueSendResult(string $level, int $resultCode, string $message, array $context): void
     {
         $this->logger->log(
             $level,
             $message,
             array_merge(
+                ['result_code' => $resultCode],
                 $context,
-                ['queue_name' =>$this->getQueueName()],
-                $extra
+                ['queue_name' =>$this->getQueueName()]
             )
         );
     }

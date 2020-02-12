@@ -80,12 +80,10 @@ class SqsQueueTest extends AbstractTestCase
         $this->assertEquals($messageId, $sqsQueue->sendInvoice($invoice, $validator));
         $this->assertEquals(0, $this->getAwsMockHandlerStackCount());
 
-        # Ensure that a log entry is created
-        $log = $this->getLogFileContents();
-
-        $this->assertTrue($log !== '');
-        $this->assertTrue(strpos($log, '.INFO:') !== false);
-        $this->assertTrue(strpos($log, 'SQS sendMessage') !== false);
+        $this->assertEquals(
+            SqsQueue::LOG_RC_SQS_MESSAGE_INVOICE_SEND_SUCCESS,
+            $this->getLogEntryResultCode($this->getLogFileContents())
+        );
     }
 
     /**
@@ -144,11 +142,10 @@ class SqsQueueTest extends AbstractTestCase
             # Ignore
         }
 
-        $log = $this->getLogFileContents();
-
-        $this->assertTrue($log !== '');
-        $this->assertTrue(strpos($log, '.ALERT:') !== false);
-        $this->assertTrue(strpos($log, 'SQS sendMessage') !== false);
+        $this->assertEquals(
+            SqsQueue::LOG_RC_SQS_MESSAGE_INVOICE_SEND_EXCEPTION,
+            $this->getLogEntryResultCode($this->getLogFileContents())
+        );
     }
 
     /**
@@ -265,13 +262,19 @@ class SqsQueueTest extends AbstractTestCase
             # Ignore
         }
 
-        $log = trim($this->getLogFileContents());
-
-        $this->assertTrue($log !== '');
-        $this->assertTrue(strpos($log, '.ALERT:') !== false);
-        $this->assertTrue(strpos($log, 'SQS sendMessageBatch') !== false);
+        $logEntries = explode("\n", trim($this->getLogFileContents()));
         # 1 log entry per invoice in the batch
-        $this->assertEquals(2, count(explode("\n", $log)));
+        $this->assertEquals(count($this->getValidInvoiceData()), count($logEntries));
+
+        $this->assertEquals(
+            SqsQueue::LOG_RC_SQS_MESSAGE_INVOICE_SENDBATCH_EXCEPTION,
+            $this->getLogEntryResultCode($logEntries[0])
+        );
+
+        $this->assertEquals(
+            SqsQueue::LOG_RC_SQS_MESSAGE_INVOICE_SENDBATCH_EXCEPTION,
+            $this->getLogEntryResultCode($logEntries[1])
+        );
     }
 
     /**
@@ -347,6 +350,15 @@ class SqsQueueTest extends AbstractTestCase
 
         # Confirm the stack is empty (ie. that the API calls HAVE been made)
         $this->assertEquals(0, $this->getAwsMockHandlerStackCount());
+    }
+
+    private function getLogEntryResultCode(string $logEntryJson): int
+    {
+        $logEntry = json_decode(trim($logEntryJson), true);
+        if ($logEntry === null) {
+            throw new Exception('Invalid JSON in log entry');
+        }
+        return (int)$logEntry['context']['result_code'];
     }
 
     private function getSqsQueueInstance(array $results = []): SqsQueue
