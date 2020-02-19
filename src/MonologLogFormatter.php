@@ -2,12 +2,11 @@
 namespace Serato\InvoiceQueue;
 
 use Monolog\Formatter\JsonFormatter;
-use DateTime;
 
 /**
  * ** Log Formatter **
  *
- * Takes the Monolog JSON formatter and prepends an ISO8601 timestamp to the record.
+ * Takes the Monolog JSON formatter and prepends a formatted timestamp to the record.
  *
  * This makes the record more legible in Cloudwatch Log.
  */
@@ -18,6 +17,6 @@ class MonologLogFormatter extends JsonFormatter
      */
     public function format(array $record): string
     {
-        return '[' . $record['datetime']->format(DateTime::ATOM) . '] ' . parent::format($record);
+        return '[' . $record['datetime']->format('Y-m-d H:i:s') . '] ' . parent::format($record);
     }
 }
