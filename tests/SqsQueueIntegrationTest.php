@@ -50,12 +50,20 @@ class SqsQueueIntegrationTest extends AbstractTestCase
         # Destroy the object. This should trigger the batch send.
         unset($sqsQueue);
 
-        $log = trim($this->getLogFileContents());
+        $logEntries = explode("\n", trim($this->getLogFileContents()));
 
-        $this->assertTrue($log !== '');
-        $this->assertTrue(strpos($log, 'SQS sendMessageBatch') !== false);
         # 1 log entry per invoice in the batch
-        $this->assertEquals(2, count(explode("\n", $log)));
+        $this->assertEquals(2, count($logEntries));
+
+        $this->assertEquals(
+            SqsQueue::LOG_RC_SQS_MESSAGE_INVOICE_SENDBATCH_SUCCESS,
+            $this->getLogEntryResultCode($logEntries[0])
+        );
+
+        $this->assertEquals(
+            SqsQueue::LOG_RC_SQS_MESSAGE_INVOICE_SENDBATCH_SUCCESS,
+            $this->getLogEntryResultCode($logEntries[1])
+        );
     }
 
     private function getSqsQueueInstance(): SqsQueue
@@ -79,10 +87,11 @@ class SqsQueueIntegrationTest extends AbstractTestCase
 
     private function getValidInvoiceData()
     {
+        $ts = date('His');
         return [
             [
                 'source' => 'SwsEc',
-                'invoice_id' => 'INV-1234ABCD',
+                'invoice_id' => 'INV-1234ABCD-' . $ts,
                 'invoice_date' => '2020-01-21T08:54:09Z',
                 'order_id' => '1234567',
                 'transaction_reference' => 'REF-ABCD1234',
@@ -116,7 +125,7 @@ class SqsQueueIntegrationTest extends AbstractTestCase
             ],
             [
                 'source' => 'SwsEc',
-                'invoice_id' => 'INV-ABCD-1234',
+                'invoice_id' => 'INV-ABCD-1234-' . $ts,
                 'invoice_date' => '2020-01-21T08:54:09Z',
                 'order_id' => '1234568',
                 'transaction_reference' => 'REF-1234ABCD',
@@ -149,5 +158,14 @@ class SqsQueueIntegrationTest extends AbstractTestCase
                 ]
             ]
         ];
+    }
+
+    private function getLogEntryResultCode(string $logEntryJson): int
+    {
+        $logEntry = json_decode(trim($logEntryJson), true);
+        if ($logEntry === null) {
+            throw new Exception('Invalid JSON in log entry');
+        }
+        return (int)$logEntry['context']['result_code'];
     }
 }
