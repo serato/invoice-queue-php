@@ -33,6 +33,11 @@
             "description": "The payment gateway through which the transaction was processed.",
             "enum": ["braintree"]
         },
+        "payment_instrument": {
+            "type": "string",
+            "description": "The payment instrument that the transaction was paid with.",
+            "enum": ["creditcard", "paypal_account"]
+        },
         "payment_instrument_transaction_reference": {
             "type": "string",
             "description": "An additional transaction reference that pertains specifically to the payment instrument. Optional."
@@ -67,7 +72,7 @@
             "minItems": 1
         }
     },
-    "required": ["source", "invoice_id", "invoice_date", "order_id", "transaction_reference", "payment_gateway", "moneyworks_debtor_code", "currency", "gross_amount", "billing_address", "items"],
+    "required": ["source", "invoice_id", "invoice_date", "order_id", "transaction_reference", "payment_gateway", "payment_instrument", "moneyworks_debtor_code", "currency", "gross_amount", "billing_address", "items"],
 
     "definitions": {
         "billing_address": {
