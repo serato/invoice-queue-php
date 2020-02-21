@@ -33,6 +33,10 @@
             "description": "The payment gateway through which the transaction was processed.",
             "enum": ["braintree"]
         },
+        "payment_instrument_transaction_reference": {
+            "type": "string",
+            "description": "An additional transaction reference that pertains specifically to the payment instrument. Optional."
+        },
         "moneyworks_debtor_code": {
             "type": "string",
             "description": "Moneyworks debtor code.",
