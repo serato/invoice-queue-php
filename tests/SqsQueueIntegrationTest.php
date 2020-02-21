@@ -9,11 +9,7 @@ use Serato\InvoiceQueue\Invoice;
 use Serato\InvoiceQueue\InvoiceValidator;
 use Aws\Sdk;
 use Aws\Credentials\CredentialProvider;
-
-#use Aws\Result;
-#use Aws\Exception\AwsException;
-#use Aws\Sqs\Exception\SqsException;
-#use Exception;
+use Exception;
 
 /**
  * Tests the interact with live AWS services.
