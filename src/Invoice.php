@@ -19,7 +19,9 @@ namespace Serato\InvoiceQueue;
  * @method string getOrderId()
  * @method string getUserId()
  * @method string getTransactionReference()
- * @method string getPaymentProvider()
+ * @method string getPaymentGateway()
+ * @method string getPaymentInstrument()
+ * @method string getPaymentInstrumentTransactionReference()
  * @method string getMoneyworksDebtorCode()
  * @method string getSubscriptionId()
  * @method string getCurrency()
@@ -40,7 +42,9 @@ namespace Serato\InvoiceQueue;
  * @method self setOrderId(string $orderId)
  * @method self setUserId(string $orderId)
  * @method self setTransactionReference(string $ref)
- * @method self setPaymentProvider(string $ref)
+ * @method self setPaymentGateway(string $gateway)
+ * @method self setPaymentInstrument(string $paymentInstrument)
+ * @method self setPaymentInstrumentTransactionReference(string $paymentInstrumentTransRef)
  * @method self setMoneyworksDebtorCode(string $mwDebtorCode)
  * @method self setSubscriptionId(string $subId)
  * @method self setCurrency(string $currency)
@@ -66,27 +70,29 @@ class Invoice extends AbstractDataContainer
     protected static function getDataKeys(): array
     {
         return [
-            # Property name                    Data type
-            'source'                        => 'string',
-            'invoice_id'                    => 'string',
-            'invoice_date'                  => 'string',
-            'order_id'                      => 'string',
-            'user_id'                       => 'string',
-            'transaction_reference'         => 'string',
-            'payment_provider'              => 'string',
-            'moneyworks_debtor_code'        => 'string',
-            'subscription_id'               => 'string',
-            'currency'                      => 'string',
-            'gross_amount'                  => 'integer',
-            'billing_address_company_name'  => 'string',
-            'billing_address_person_name'   => 'string',
-            'billing_address_1'             => 'string',
-            'billing_address_2'             => 'string',
-            'billing_address_3'             => 'string',
-            'billing_address_city'          => 'string',
-            'billing_address_region'        => 'string',
-            'billing_address_post_code'     => 'string',
-            'billing_address_country_iso'   => 'string'
+            # Property name                             Data type
+            'source'                                    => 'string',
+            'invoice_id'                                => 'string',
+            'invoice_date'                              => 'string',
+            'order_id'                                  => 'string',
+            'user_id'                                   => 'string',
+            'transaction_reference'                     => 'string',
+            'payment_gateway'                           => 'string',
+            'payment_instrument'                        => 'string',
+            'payment_instrument_transaction_reference'  => 'string',
+            'moneyworks_debtor_code'                    => 'string',
+            'subscription_id'                           => 'string',
+            'currency'                                  => 'string',
+            'gross_amount'                              => 'integer',
+            'billing_address_company_name'              => 'string',
+            'billing_address_person_name'               => 'string',
+            'billing_address_1'                         => 'string',
+            'billing_address_2'                         => 'string',
+            'billing_address_3'                         => 'string',
+            'billing_address_city'                      => 'string',
+            'billing_address_region'                    => 'string',
+            'billing_address_post_code'                 => 'string',
+            'billing_address_country_iso'               => 'string'
         ];
     }
 
