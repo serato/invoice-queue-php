@@ -86,7 +86,7 @@ class SqsQueueIntegrationTest extends AbstractTestCase
         $ts = date('His');
         return [
             [
-                'source' => 'SwsEc',
+                'source' => Invoice::SOURCE_SWSEC,
                 'invoice_id' => 'INV-1234ABCD-' . $ts,
                 'invoice_date' => '2020-01-21T08:54:09Z',
                 'order_id' => '1234567',
@@ -120,7 +120,7 @@ class SqsQueueIntegrationTest extends AbstractTestCase
                 ]
             ],
             [
-                'source' => 'SwsEc',
+                'source' => Invoice::SOURCE_SWSEC,
                 'invoice_id' => 'INV-ABCD-1234-' . $ts,
                 'invoice_date' => '2020-01-21T08:54:09Z',
                 'order_id' => '1234568',

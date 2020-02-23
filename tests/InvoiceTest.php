@@ -108,7 +108,7 @@ class InvoiceTest extends AbstractTestCase
     private function getValidInvoiceData()
     {
         return  [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -147,7 +147,7 @@ class InvoiceTest extends AbstractTestCase
     private function getInvalidInvoiceData()
     {
         return  [
-            # 'source' => 'SwsEc', # Missing required field
+            # 'source' => Invoice::SOURCE_SWSEC, # Missing required field
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',

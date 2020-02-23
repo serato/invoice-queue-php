@@ -1,11 +1,12 @@
 <?php
+use Serato\InvoiceQueue\Invoice;
 
 return [
     [
         null,
         true,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -46,7 +47,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -90,7 +91,7 @@ return [
         null,
         true,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',

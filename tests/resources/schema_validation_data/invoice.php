@@ -1,4 +1,6 @@
 <?php
+use Serato\InvoiceQueue\Invoice;
+
 return [
     [
         null,
@@ -9,7 +11,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -38,7 +40,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -67,7 +69,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -96,7 +98,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -125,7 +127,7 @@ return [
         null,
         false,
         [
-            # 'source' => 'SwsEc', # Invalid. Is required.
+            # 'source' => Invoice::SOURCE_SWSEC, # Invalid. Is required.
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -164,7 +166,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             # 'invoice_id' => 'A STRING VAL', # Invalid. Required.
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -203,7 +205,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             # 'invoice_date' => '2020-01-21T08:54:09Z', # Invalid. Is required.
             'order_id' => 'ORDER--ID',
@@ -242,7 +244,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21 08:54:09', # Invalid format
             'order_id' => 'ORDER--ID',
@@ -281,7 +283,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             # 'order_id' => 'ORDER--ID', # Invalid. Is required.
@@ -320,7 +322,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -360,7 +362,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -400,7 +402,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -439,7 +441,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -478,7 +480,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -517,7 +519,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -556,7 +558,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -595,7 +597,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -634,7 +636,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -673,7 +675,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -712,7 +714,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -751,7 +753,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -790,7 +792,7 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -832,7 +834,7 @@ return [
         null,
         true,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
@@ -871,7 +873,7 @@ return [
         null,
         true,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
