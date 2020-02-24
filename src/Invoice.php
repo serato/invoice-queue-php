@@ -62,8 +62,11 @@ namespace Serato\InvoiceQueue;
 class Invoice extends AbstractDataContainer
 {
     # Consts for emum values
+    # Consts for `source` attribute
     public const SOURCE_MAGENTO = 'Magento';
     public const SOURCE_SWSEC = 'SwsEc';
+    # Consts for `payment_gateway` attribute
+    public const PAYMENTGATEWAY_BRAINTREE = 'braintree';
 
     /** @var array */
     private $items = [];
