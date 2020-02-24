@@ -88,7 +88,7 @@ class InvoiceTest extends AbstractTestCase
             ->setAmountTax(0)
             ->setAmountNet(100)
             ->setUnitPrice(100)
-            ->setTaxCode('V');
+            ->setTaxCode(Invoice::TAXCODE_V);
 
         $invoice = Invoice::create();
 
@@ -138,7 +138,7 @@ class InvoiceTest extends AbstractTestCase
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ];
@@ -177,7 +177,7 @@ class InvoiceTest extends AbstractTestCase
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ];

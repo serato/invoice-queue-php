@@ -404,7 +404,7 @@ class SqsQueueTest extends AbstractTestCase
                         'amount_tax' => 200,
                         'amount_net' => 2000,
                         'unit_price' => 1000,
-                        'tax_code' => 'V'
+                        'tax_code' => Invoice::TAXCODE_V
                     ]
                 ]
             ],
@@ -439,7 +439,7 @@ class SqsQueueTest extends AbstractTestCase
                         'amount_tax' => 100,
                         'amount_net' => 1000,
                         'unit_price' => 1000,
-                        'tax_code' => 'V'
+                        'tax_code' => Invoice::TAXCODE_V
                     ]
                 ]
             ]

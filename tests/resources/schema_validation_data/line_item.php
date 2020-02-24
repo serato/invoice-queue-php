@@ -1,4 +1,6 @@
 <?php
+use Serato\InvoiceQueue\Invoice;
+
 return [
     [
         'line_item',
@@ -15,7 +17,7 @@ return [
             'amount_tax' => 0,
             'amount_net' => 0,
             'unit_price' => 0,
-            'tax_code' => 'V'
+            'tax_code' => Invoice::TAXCODE_V
         ]
     ],
     [
@@ -28,7 +30,7 @@ return [
             'amount_tax' => 0,
             'amount_net' => 0,
             'unit_price' => 0,
-            'tax_code' => 'Q' # Invalid. Must be 'V' or 'Z'.
+            'tax_code' => 'Q' # Invalid. Must be Invoice::TAXCODE_V or Invoice::TAXCODE_Z.
         ]
     ],
     [
@@ -41,7 +43,7 @@ return [
             'amount_tax' => "0", # Invalid type
             'amount_net' => 0,
             'unit_price' => 0,
-            'tax_code' => 'V'
+            'tax_code' => Invoice::TAXCODE_V
         ]
     ],
     [
@@ -54,7 +56,7 @@ return [
             'amount_tax' => 0,
             'amount_net' => 0,
             'unit_price' => 0,
-            'tax_code' => 'V'
+            'tax_code' => Invoice::TAXCODE_V
         ]
     ],
     [
@@ -67,7 +69,7 @@ return [
             'amount_tax' => 0,
             'amount_net' => 0,
             'unit_price' => 0,
-            'tax_code' => 'V'
+            'tax_code' => Invoice::TAXCODE_V
         ]
     ],
     [
@@ -80,7 +82,7 @@ return [
             'amount_tax' => 0,
             'amount_net' => 0,
             'unit_price' => 0,
-            'tax_code' => 'V'
+            'tax_code' => Invoice::TAXCODE_V
         ]
     ],
     [
@@ -93,7 +95,7 @@ return [
             # 'amount_tax' => 0, # Invalid. Is required.
             'amount_net' => 0,
             'unit_price' => 0,
-            'tax_code' => 'V'
+            'tax_code' => Invoice::TAXCODE_V
         ]
     ],
     [
@@ -106,7 +108,7 @@ return [
             'amount_tax' => 0,
             # 'amount_net' => 0, # Invalid. Is required.
             'unit_price' => 0,
-            'tax_code' => 'V'
+            'tax_code' => Invoice::TAXCODE_V
         ]
     ],
     [
@@ -119,7 +121,7 @@ return [
             'amount_tax' => 0,
             'amount_net' => 0,
             # 'unit_price' => 0, # Invalid. Is required.
-            'tax_code' => 'V'
+            'tax_code' => Invoice::TAXCODE_V
         ]
     ],
     [
@@ -132,7 +134,7 @@ return [
             'amount_tax' => 0,
             'amount_net' => 0,
             'unit_price' => 0,
-            # 'tax_code' => 'V' # Invalid. Is required.
+            # 'tax_code' => Invoice::TAXCODE_V # Invalid. Is required.
         ]
     ],
     [
@@ -145,7 +147,7 @@ return [
             'amount_tax' => 0,
             'amount_net' => 0,
             'unit_price' => 0,
-            'tax_code' => 'V'
+            'tax_code' => Invoice::TAXCODE_V
         ]
     ]
 ];

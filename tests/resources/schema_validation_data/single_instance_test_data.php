@@ -37,7 +37,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ],
@@ -79,7 +79,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ],
                 # Invalid item
                 []
@@ -121,7 +121,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ],
                 [
                     'sku' => 'SKU2',
@@ -130,7 +130,7 @@ return [
                     'amount_tax' => 1000,
                     'amount_net' => 20000,
                     'unit_price' => 1000,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ],

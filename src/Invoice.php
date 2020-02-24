@@ -78,6 +78,9 @@ class Invoice extends AbstractDataContainer
     public const CURRENCY_USD = 'USD';
     public const CURRENCY_EUR = 'EUR';
     public const CURRENCY_NZD = 'NZD';
+    # Consts for `tax_code` attribute
+    public const TAXCODE_V = 'V';
+    public const TAXCODE_Z = 'Z';
 
     /** @var array */
     private $items = [];
