@@ -1,4 +1,6 @@
 <?php
+use Serato\InvoiceQueue\Invoice;
+
 return [
     [
         null,
@@ -9,16 +11,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [], # Invalid
             'items' => [
@@ -29,7 +31,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -38,16 +40,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             # 'billing_address' => [], # Invalid. Is required.
             'items' => [
@@ -58,7 +60,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -67,16 +69,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -96,16 +98,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -125,16 +127,16 @@ return [
         null,
         false,
         [
-            # 'source' => 'SwsEc', # Invalid. Is required.
+            # 'source' => Invoice::SOURCE_SWSEC, # Invalid. Is required.
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -155,7 +157,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -164,16 +166,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             # 'invoice_id' => 'A STRING VAL', # Invalid. Required.
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -194,7 +196,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -203,16 +205,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             # 'invoice_date' => '2020-01-21T08:54:09Z', # Invalid. Is required.
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -233,7 +235,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -242,16 +244,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21 08:54:09', # Invalid format
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -272,7 +274,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -281,16 +283,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             # 'order_id' => 'ORDER--ID', # Invalid. Is required.
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -311,7 +313,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -320,17 +322,17 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'user_id' => 1, # Invalid. Should be a string.
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -351,7 +353,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -360,17 +362,17 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'user_id' => '1245',
             # 'transaction_reference' => 'A STRING VAL', # Invalid. Is required.
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -391,7 +393,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -400,16 +402,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            # 'payment_gateway' => 'braintree', # Invalid. Is required.
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            # 'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE, # Invalid. Is required.
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -430,7 +432,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -439,16 +441,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
             'payment_provider' => 'briantree', # Invalid. Value is not in enum.
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -469,7 +471,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -478,16 +480,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            # 'payment_instrument' => 'creditcard', # Invalid. Is required.
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            # 'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD, # Invalid. Is required.
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -508,7 +510,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -517,16 +519,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
             'payment_instrument' => 'cash', # Invalid. Value is not in enum.
-            'moneyworks_debtor_code' => 'WEBC001',
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -547,7 +549,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -556,16 +558,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            # 'moneyworks_debtor_code' => 'WEBC001', # Invalid. Is required.
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            # 'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001, # Invalid. Is required.
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -586,7 +588,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -595,16 +597,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => 'A VAL', # Invalid. Value is not in enum.
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -625,7 +627,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -634,16 +636,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            # 'currency' => 'USD', # Invalid. Is required.
+            # 'currency' => Invoice::CURRENCY_USD, # Invalid. Is required.
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -664,7 +666,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -673,14 +675,14 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
             'currency' => 'UKP', # Invalid. Value not in enum.
             'gross_amount' => 0,
@@ -703,7 +705,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -712,16 +714,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             # 'gross_amount' => 0, # Invalid. Is required.
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -742,7 +744,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -751,16 +753,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => "0", # Invalid type.
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -781,7 +783,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -790,16 +792,16 @@ return [
         null,
         false,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -821,7 +823,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ],
                 # Invalid item
                 []
@@ -832,16 +834,16 @@ return [
         null,
         true,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -862,7 +864,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]
@@ -871,16 +873,16 @@ return [
         null,
         true,
         [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -901,7 +903,7 @@ return [
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ],
                 [
                     'sku' => 'SKU2',
@@ -910,7 +912,7 @@ return [
                     'amount_tax' => 1000,
                     'amount_net' => 20000,
                     'unit_price' => 1000,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ]

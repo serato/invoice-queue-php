@@ -109,7 +109,7 @@ $invoice = Invoice::create();
 # Set individual properties
 $invoice
   ->setInvoiceId('MyInvoiceId')
-  ->setCurrency('EUR')
+  ->setCurrency(Invoice::CURRENCY_EUR)
   ->setBillingAddressCompanyName('Acme Inc');
 // ...etc
 
@@ -130,7 +130,7 @@ $item
   ->setAmountTax(0)
   ->setAmountNet(1000)
   ->setUnitPrice(1000)
-  ->setTaxCode('V');
+  ->setTaxCode(Invoice::TAXCODE_V);
 
 # Add the Item to an Invoice
 $invoice->addItem($item);

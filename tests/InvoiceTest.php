@@ -88,7 +88,7 @@ class InvoiceTest extends AbstractTestCase
             ->setAmountTax(0)
             ->setAmountNet(100)
             ->setUnitPrice(100)
-            ->setTaxCode('V');
+            ->setTaxCode(Invoice::TAXCODE_V);
 
         $invoice = Invoice::create();
 
@@ -108,16 +108,16 @@ class InvoiceTest extends AbstractTestCase
     private function getValidInvoiceData()
     {
         return  [
-            'source' => 'SwsEc',
+            'source' => Invoice::SOURCE_SWSEC,
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -138,7 +138,7 @@ class InvoiceTest extends AbstractTestCase
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ];
@@ -147,16 +147,16 @@ class InvoiceTest extends AbstractTestCase
     private function getInvalidInvoiceData()
     {
         return  [
-            # 'source' => 'SwsEc', # Missing required field
+            # 'source' => Invoice::SOURCE_SWSEC, # Missing required field
             'invoice_id' => 'A STRING VAL',
             'invoice_date' => '2020-01-21T08:54:09Z',
             'order_id' => 'ORDER--ID',
             'transaction_reference' => 'A STRING VAL',
-            'payment_gateway' => 'braintree',
-            'payment_instrument' => 'creditcard',
-            'moneyworks_debtor_code' => 'WEBC001',
+            'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+            'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => '0', # Wrong data type
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -177,7 +177,7 @@ class InvoiceTest extends AbstractTestCase
                     'amount_tax' => 0,
                     'amount_net' => 0,
                     'unit_price' => 0,
-                    'tax_code' => 'V'
+                    'tax_code' => Invoice::TAXCODE_V
                 ]
             ]
         ];

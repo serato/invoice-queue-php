@@ -4,8 +4,8 @@
     "properties": {
         "source": {
             "type": "string",
-            "description": "The online ordering system which created the invoice. 'SwsEc' when SWS Ecommerce Service, 'Magen' when Magento.",
-            "enum": ["SwsEc", "Magen"]
+            "description": "The online ordering system which created the invoice. 'SwsEc' when SWS Ecommerce Service, 'Magento' when Magento.",
+            "enum": ["SwsEc", "Magento"]
         },
         "invoice_id": {
             "type": "string",

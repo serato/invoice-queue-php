@@ -61,6 +61,27 @@ namespace Serato\InvoiceQueue;
  */
 class Invoice extends AbstractDataContainer
 {
+    # ** Consts for attributes that have `enum` attributes in `invoice_schema.json` **
+    # Consts for `source` attribute
+    public const SOURCE_MAGENTO = 'Magento';
+    public const SOURCE_SWSEC = 'SwsEc';
+    # Consts for `payment_gateway` attribute
+    public const PAYMENTGATEWAY_BRAINTREE = 'braintree';
+    # Consts for `payment_instrument` attribute
+    public const PAYMENTINSTRUMENT_CREDITCARD = 'creditcard';
+    public const PAYMENTINSTRUMENT_PAYPALACCOUNT = 'paypal_account';
+    # Consts for `moneyworks_debtor_code` attribute
+    public const MONEYWORKSDEBTORCODE_WEBC001 = 'WEBC001';
+    public const MONEYWORKSDEBTORCODE_WEBC003 = 'WEBC003';
+    public const MONEYWORKSDEBTORCODE_WEBC004 = 'WEBC004';
+    # Consts for `currency` attribute
+    public const CURRENCY_USD = 'USD';
+    public const CURRENCY_EUR = 'EUR';
+    public const CURRENCY_NZD = 'NZD';
+    # Consts for `tax_code` attribute
+    public const TAXCODE_V = 'V';
+    public const TAXCODE_Z = 'Z';
+
     /** @var array */
     private $items = [];
 

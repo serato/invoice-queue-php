@@ -374,16 +374,16 @@ class SqsQueueTest extends AbstractTestCase
     {
         return [
             [
-                'source' => 'SwsEc',
+                'source' => Invoice::SOURCE_SWSEC,
                 'invoice_id' => 'INV-1234ABCD',
                 'invoice_date' => '2020-01-21T08:54:09Z',
                 'order_id' => '1234567',
                 'transaction_reference' => 'REF-ABCD1234',
-                'payment_gateway' => 'braintree',
-                'payment_instrument' => 'creditcard',
-                'moneyworks_debtor_code' => 'WEBC001',
+                'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+                'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+                'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
                 'subscription_id' => 'SUB-XYZ-ABC',
-                'currency' => 'USD',
+                'currency' => Invoice::CURRENCY_USD,
                 'gross_amount' => 0,
                 'billing_address' => [
                     'company_name' => 'Company Inc',
@@ -404,21 +404,21 @@ class SqsQueueTest extends AbstractTestCase
                         'amount_tax' => 200,
                         'amount_net' => 2000,
                         'unit_price' => 1000,
-                        'tax_code' => 'V'
+                        'tax_code' => Invoice::TAXCODE_V
                     ]
                 ]
             ],
             [
-                'source' => 'SwsEc',
+                'source' => Invoice::SOURCE_SWSEC,
                 'invoice_id' => 'INV-ABCD-1234',
                 'invoice_date' => '2020-01-21T08:54:09Z',
                 'order_id' => '1234568',
                 'transaction_reference' => 'REF-1234ABCD',
-                'payment_gateway' => 'braintree',
-                'payment_instrument' => 'creditcard',
-                'moneyworks_debtor_code' => 'WEBC001',
+                'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
+                'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
+                'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
                 'subscription_id' => 'SUB-ABC-XYZ',
-                'currency' => 'USD',
+                'currency' => Invoice::CURRENCY_USD,
                 'gross_amount' => 0,
                 'billing_address' => [
                     'company_name' => 'Company Inc',
@@ -439,7 +439,7 @@ class SqsQueueTest extends AbstractTestCase
                         'amount_tax' => 100,
                         'amount_net' => 1000,
                         'unit_price' => 1000,
-                        'tax_code' => 'V'
+                        'tax_code' => Invoice::TAXCODE_V
                     ]
                 ]
             ]
