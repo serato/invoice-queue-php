@@ -383,7 +383,7 @@ class SqsQueueTest extends AbstractTestCase
                 'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
                 'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
                 'subscription_id' => 'SUB-XYZ-ABC',
-                'currency' => 'USD',
+                'currency' => Invoice::CURRENCY_USD,
                 'gross_amount' => 0,
                 'billing_address' => [
                     'company_name' => 'Company Inc',
@@ -418,7 +418,7 @@ class SqsQueueTest extends AbstractTestCase
                 'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
                 'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
                 'subscription_id' => 'SUB-ABC-XYZ',
-                'currency' => 'USD',
+                'currency' => Invoice::CURRENCY_USD,
                 'gross_amount' => 0,
                 'billing_address' => [
                     'company_name' => 'Company Inc',

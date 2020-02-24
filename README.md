@@ -109,7 +109,7 @@ $invoice = Invoice::create();
 # Set individual properties
 $invoice
   ->setInvoiceId('MyInvoiceId')
-  ->setCurrency('EUR')
+  ->setCurrency(Invoice::CURRENCY_EUR)
   ->setBillingAddressCompanyName('Acme Inc');
 // ...etc
 

@@ -20,7 +20,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [], # Invalid
             'items' => [
@@ -49,7 +49,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             # 'billing_address' => [], # Invalid. Is required.
             'items' => [
@@ -78,7 +78,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -107,7 +107,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -136,7 +136,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -175,7 +175,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -214,7 +214,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -253,7 +253,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -292,7 +292,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -332,7 +332,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -372,7 +372,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -411,7 +411,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -450,7 +450,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -489,7 +489,7 @@ return [
             # 'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD, # Invalid. Is required.
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -528,7 +528,7 @@ return [
             'payment_instrument' => 'cash', # Invalid. Value is not in enum.
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -567,7 +567,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             # 'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001, # Invalid. Is required.
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -606,7 +606,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => 'A VAL', # Invalid. Value is not in enum.
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -645,7 +645,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            # 'currency' => 'USD', # Invalid. Is required.
+            # 'currency' => Invoice::CURRENCY_USD, # Invalid. Is required.
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -723,7 +723,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             # 'gross_amount' => 0, # Invalid. Is required.
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -762,7 +762,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => "0", # Invalid type.
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -801,7 +801,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -843,7 +843,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',
@@ -882,7 +882,7 @@ return [
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
             'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
-            'currency' => 'USD',
+            'currency' => Invoice::CURRENCY_USD,
             'gross_amount' => 0,
             'billing_address' => [
                 'company_name' => 'Company Inc',

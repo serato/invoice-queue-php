@@ -94,7 +94,7 @@ class SqsQueueIntegrationTest extends AbstractTestCase
                 'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
                 'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
                 'subscription_id' => 'SUB-XYZ-ABC',
-                'currency' => 'USD',
+                'currency' => Invoice::CURRENCY_USD,
                 'gross_amount' => 0,
                 'billing_address' => [
                     'company_name' => 'Company Inc',
@@ -128,7 +128,7 @@ class SqsQueueIntegrationTest extends AbstractTestCase
                 'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
                 'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
                 'subscription_id' => 'SUB-ABC-XYZ',
-                'currency' => 'USD',
+                'currency' => Invoice::CURRENCY_USD,
                 'gross_amount' => 0,
                 'billing_address' => [
                     'company_name' => 'Company Inc',
