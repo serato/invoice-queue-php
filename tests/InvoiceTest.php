@@ -115,7 +115,7 @@ class InvoiceTest extends AbstractTestCase
             'transaction_reference' => 'A STRING VAL',
             'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
-            'moneyworks_debtor_code' => 'WEBC001',
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
             'currency' => 'USD',
             'gross_amount' => 0,
@@ -154,7 +154,7 @@ class InvoiceTest extends AbstractTestCase
             'transaction_reference' => 'A STRING VAL',
             'payment_gateway' => Invoice::PAYMENTGATEWAY_BRAINTREE,
             'payment_instrument' => Invoice::PAYMENTINSTRUMENT_CREDITCARD,
-            'moneyworks_debtor_code' => 'WEBC001',
+            'moneyworks_debtor_code' => Invoice::MONEYWORKSDEBTORCODE_WEBC001,
             'subscription_id' => 'A STRING VAL',
             'currency' => 'USD',
             'gross_amount' => '0', # Wrong data type

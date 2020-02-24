@@ -70,6 +70,10 @@ class Invoice extends AbstractDataContainer
     # Consts for `payment_instrument` attribute
     public const PAYMENTINSTRUMENT_CREDITCARD = 'creditcard';
     public const PAYMENTINSTRUMENT_PAYPALACCOUNT = 'paypal_account';
+    # Consts for `moneyworks_debtor_code` attribute
+    public const MONEYWORKSDEBTORCODE_WEBC001 = 'WEBC001';
+    public const MONEYWORKSDEBTORCODE_WEBC003 = 'WEBC003';
+    public const MONEYWORKSDEBTORCODE_WEBC004 = 'WEBC004';
 
     /** @var array */
     private $items = [];
