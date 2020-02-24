@@ -67,6 +67,9 @@ class Invoice extends AbstractDataContainer
     public const SOURCE_SWSEC = 'SwsEc';
     # Consts for `payment_gateway` attribute
     public const PAYMENTGATEWAY_BRAINTREE = 'braintree';
+    # Consts for `payment_instrument` attribute
+    public const PAYMENTINSTRUMENT_CREDITCARD = 'creditcard';
+    public const PAYMENTINSTRUMENT_PAYPALACCOUNT = 'paypal_account';
 
     /** @var array */
     private $items = [];
