@@ -270,6 +270,16 @@ class SqsQueue
     }
 
     /**
+     * Returns the PSR logger instance
+     *
+     * @return LoggerInterface
+     */
+    public function getLogger(): LoggerInterface
+    {
+        return $this->logger;
+    }
+
+    /**
      * Fetches a queue URL from the SQS service. If the queue does not exist it's created.
      *
      * The $createQueueParams parameter is a callable that should return an associative array
