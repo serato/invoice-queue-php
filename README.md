@@ -10,7 +10,7 @@ To include this library in a PHP project add the following line to the project's
 ```json
 {
   "require": {
-    "serato/invoice-queue": "dev-master"
+    "serato/sqs-invoice-queue": "^1.0.0"
   }
 }
 ```
