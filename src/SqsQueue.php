@@ -181,7 +181,7 @@ class SqsQueue
                             'ContentBasedDeduplication' => 'true',
                             'RedrivePolicy' => json_encode([
                                 'deadLetterTargetArn' => $result['Attributes']['QueueArn'],
-                                'maxReceiveCount' => 5
+                                'maxReceiveCount' => 2
                             ])
                         ],
                     ];
