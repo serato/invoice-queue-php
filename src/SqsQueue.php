@@ -26,6 +26,7 @@ class SqsQueue
     public const LOG_RC_SQS_MESSAGE_INVOICE_SENDBATCH_EXCEPTION = 1004;
 
     public const SEND_BATCH_SIZE = 10;
+    public const MAX_RECEIVE_COUNT = 3;
 
     /** @var SqsClient */
     private $sqsClient;
@@ -181,7 +182,7 @@ class SqsQueue
                             'ContentBasedDeduplication' => 'true',
                             'RedrivePolicy' => json_encode([
                                 'deadLetterTargetArn' => $result['Attributes']['QueueArn'],
-                                'maxReceiveCount' => 2
+                                'maxReceiveCount' => self::MAX_RECEIVE_COUNT
                             ])
                         ],
                     ];
