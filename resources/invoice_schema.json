@@ -157,7 +157,7 @@
                 },
                 "tax_code": {
                     "type": "string",
-                    "description": "Tax code for line item. 'V' when any rate of tax is added, 'S' when any rate of tax is added in US, 'Z' when no tax is added.",
+                    "description": "Tax code for line item. 'S' when US tax rate is added, 'V' when any other rate of tax is added, 'Z' when no tax is added.",
                     "enum": ["V", "Z", "S"]
                 }
             },
