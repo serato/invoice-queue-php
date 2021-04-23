@@ -22,11 +22,11 @@ return [
     ],
     [
         'billing_address',
-        false,
+        true,
         [
             'company_name' => 'Company Inc',
             'person_name' => 'Jo Bloggs',
-            # 'address_1' => '123 Street Road', # Invalid. Is required.
+            # 'address_1' => '123 Street Road', # Valid. Is optional.
             'address_2' => 'Suburbia',
             'address_3' => 'The Stixx',
             'city' => 'Townsville',
@@ -37,14 +37,14 @@ return [
     ],
     [
         'billing_address',
-        false,
+        true,
         [
             'company_name' => 'Company Inc',
             'person_name' => 'Jo Bloggs',
             'address_1' => '123 Street Road',
             'address_2' => 'Suburbia',
             'address_3' => 'The Stixx',
-            # 'city' => 'Townsville', # Invalid. Is required.
+            # 'city' => 'Townsville', # Valid. Is optional.
             'region' => 'Statey',
             'post_code' => '90210',
             'country_iso' => 'NZ'
