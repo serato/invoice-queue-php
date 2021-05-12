@@ -119,7 +119,7 @@
                     "example": "NZ"
                 }
             },
-            "required": ["address_1", "city", "country_iso"]
+            "required": ["country_iso"]
         },
 
         "line_item": {
