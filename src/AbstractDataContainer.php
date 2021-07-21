@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Serato\InvoiceQueue;
@@ -66,7 +67,7 @@ abstract class AbstractDataContainer
             $this->setData(static::getBaseData());
         } else {
             if ($validator === null) {
-                $this->validator = new InvoiceValidator;
+                $this->validator = new InvoiceValidator();
             } else {
                 $this->validator = $validator;
             }
@@ -246,7 +247,7 @@ abstract class AbstractDataContainer
         );
         if ($dataPropertyName === null) {
             # This should never happen :-)
-            throw new Exception;
+            throw new Exception();
         }
         $dataPropertyName = ltrim($dataPropertyName, '_');
         if (!isset(static::getDataKeys()[$dataPropertyName])) {

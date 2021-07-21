@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Serato\InvoiceQueue\Test;
@@ -34,7 +35,7 @@ class SqsQueueIntegrationTest extends AbstractTestCase
      */
     public function testSendInvoiceToBatch()
     {
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
 
         $sqsQueue = $this->getSqsQueueInstance();
 

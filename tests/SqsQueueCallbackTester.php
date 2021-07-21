@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Serato\InvoiceQueue\Test;
@@ -13,7 +14,7 @@ class SqsQueueCallbackTester extends AbstractTestCase
 {
     /** @var array */
     public $successfulInvoices;
-    
+
     /** @var array */
     public $failedInvoices;
     /**

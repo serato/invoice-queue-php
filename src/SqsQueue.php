@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Serato\InvoiceQueue;
@@ -96,7 +97,7 @@ class SqsQueue
     public function sendInvoice(Invoice $invoice, ?InvoiceValidator $validator = null): string
     {
         if ($validator === null) {
-            $validator = new InvoiceValidator;
+            $validator = new InvoiceValidator();
         }
         if (!$validator->validateArray($invoice->getData())) {
             throw new ValidationException($validator->getErrors());
@@ -460,7 +461,7 @@ class SqsQueue
             array_merge(
                 ['result_code' => $resultCode],
                 $context,
-                ['queue_name' =>$this->getQueueName()]
+                ['queue_name' => $this->getQueueName()]
             )
         );
     }
