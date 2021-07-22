@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Serato\InvoiceQueue\Test;
@@ -65,8 +66,8 @@ class SqsQueueTest extends AbstractTestCase
     public function testSendInvoiceValidInvoiceSuccessfulDelivery($validator)
     {
         $messageId = '123abc456';
-    
-        $invoice = Invoice::load($this->getValidInvoiceData()[0], new InvoiceValidator);
+
+        $invoice = Invoice::load($this->getValidInvoiceData()[0], new InvoiceValidator());
 
         $results = [
             # Result for GetQueueUrl command
@@ -76,7 +77,7 @@ class SqsQueueTest extends AbstractTestCase
         ];
 
         $sqsQueue = $this->getSqsQueueInstance($results);
-        
+
         $this->assertEquals($messageId, $sqsQueue->sendInvoice($invoice, $validator));
         $this->assertEquals(0, $this->getAwsMockHandlerStackCount());
 
@@ -94,7 +95,7 @@ class SqsQueueTest extends AbstractTestCase
      */
     public function testSendInvoiceValidInvoiceUnsuccessfulDelivery($validator)
     {
-        $invoice = Invoice::load($this->getValidInvoiceData()[0], new InvoiceValidator);
+        $invoice = Invoice::load($this->getValidInvoiceData()[0], new InvoiceValidator());
 
         $sqsClient = $this->getMockedAwsSdk()->createSqs(['version' => '2012-11-05']);
         $cmd = $sqsClient->getCommand('SendMessage', [
@@ -121,7 +122,7 @@ class SqsQueueTest extends AbstractTestCase
      */
     public function testSendInvoiceValidInvoiceUnsuccessfulDeliveryLogEntry($validator)
     {
-        $invoice = Invoice::load($this->getValidInvoiceData()[0], new InvoiceValidator);
+        $invoice = Invoice::load($this->getValidInvoiceData()[0], new InvoiceValidator());
 
         $sqsClient = $this->getMockedAwsSdk()->createSqs(['version' => '2012-11-05']);
         $cmd = $sqsClient->getCommand('SendMessage', [
@@ -164,7 +165,7 @@ class SqsQueueTest extends AbstractTestCase
 
     public function sendInvoiceProvider(): array
     {
-        return [[null], [new InvoiceValidator]];
+        return [[null], [new InvoiceValidator()]];
     }
 
     /**
@@ -173,7 +174,7 @@ class SqsQueueTest extends AbstractTestCase
      */
     public function testSendInvoiceToBatchSuccessfulSendViaDestructor()
     {
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
         $invoice = Invoice::load($this->getValidInvoiceData()[0], $validator);
 
         $results = [
@@ -201,7 +202,7 @@ class SqsQueueTest extends AbstractTestCase
      */
     public function testSendInvoiceToBatchUnsuccessfulSendViaDestructor()
     {
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
 
         $sqsClient = $this->getMockedAwsSdk()->createSqs(['version' => '2012-11-05']);
         $cmd = $sqsClient->getCommand('SendMessage', [
@@ -234,7 +235,7 @@ class SqsQueueTest extends AbstractTestCase
      */
     public function testSendInvoiceToBatchUnsuccessfulSendViaDestructorLogEntry()
     {
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
 
         $sqsClient = $this->getMockedAwsSdk()->createSqs(['version' => '2012-11-05']);
         $cmd = $sqsClient->getCommand('SendMessage', [
@@ -283,7 +284,7 @@ class SqsQueueTest extends AbstractTestCase
      */
     public function testSendInvoiceToBatchSuccessfulSendViaSendThreshold()
     {
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
         $invoice = Invoice::load($this->getValidInvoiceData()[0], $validator);
 
         $results = [
@@ -301,7 +302,7 @@ class SqsQueueTest extends AbstractTestCase
             $invoice->setInvoiceId($invoice->getInvoiceId() . '-' . $i);
             $sqsQueue->sendInvoiceToBatch($invoice, $validator);
         }
-        
+
         # Destroy the object. This should trigger the final batch send.
         unset($sqsQueue);
 
@@ -314,7 +315,7 @@ class SqsQueueTest extends AbstractTestCase
      */
     public function testSendInvoiceToBatchOnSendMessageBatchCallable()
     {
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
         $successInvoice = Invoice::load($this->getValidInvoiceData()[0], $validator);
         $failedInvoice = Invoice::load($this->getValidInvoiceData()[1], $validator);
 
@@ -331,13 +332,13 @@ class SqsQueueTest extends AbstractTestCase
         $sqsQueue = $this->getSqsQueueInstance($results);
 
         # Use SqsQueueCallbackTester to test the callback
-        $callbackTester = new SqsQueueCallbackTester;
+        $callbackTester = new SqsQueueCallbackTester();
         $sqsQueue->setOnSendMessageBatchCallback($callbackTester);
 
         $sqsQueue
             ->sendInvoiceToBatch($successInvoice, $validator)
             ->sendInvoiceToBatch($failedInvoice, $validator);
-        
+
         # Destroy the object. This should trigger the final batch send.
         unset($sqsQueue);
 

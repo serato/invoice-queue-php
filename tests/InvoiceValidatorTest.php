@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Serato\InvoiceQueue\Test;
@@ -20,7 +21,7 @@ class InvoiceValidatorTest extends AbstractTestCase
      */
     public function testValidate(?string $ref, bool $isValid, array $data)
     {
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
         $bVal = $validator->validateArray($data, $ref);
         # print_r($validator->getErrors($ref));
         $this->assertEquals($isValid, $bVal);
@@ -50,7 +51,7 @@ class InvoiceValidatorTest extends AbstractTestCase
      */
     public function testInvalidJsonString()
     {
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
         $validator->validateJsonString('');
     }
 
@@ -60,13 +61,13 @@ class InvoiceValidatorTest extends AbstractTestCase
     public function testFailedJsonEncode()
     {
         $fp = fopen(__DIR__ . '/resources/schema_validation_data/line_item.php', 'r');
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
         $validator->validateArray(['fp' => $fp]);
     }
 
     public function testMultipleUsesOfSingleInstance()
     {
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
 
         $fileData = include __DIR__ . '/resources/schema_validation_data/single_instance_test_data.php';
 
