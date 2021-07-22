@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Serato\InvoiceQueue\Test;
@@ -13,8 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 abstract class AbstractTestCase extends TestCase
 {
-    const LOG_FILE_PATH = '/srv/www/shared/phpunit.log';
-
     /** @var MockHandler */
     private $mockHandler;
 

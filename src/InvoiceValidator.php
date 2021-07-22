@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Serato\InvoiceQueue;
@@ -33,7 +34,7 @@ class InvoiceValidator
             # This should never happen :-)
             throw new Exception('Unable to load JSON schema file');
         }
-        
+
         $this->schemaFilePath = 'file://' . $schemaPath;
     }
 
@@ -53,9 +54,9 @@ class InvoiceValidator
         # objects that the JSON schema validator requires.
         $json = json_encode($data);
         if ($json === false) {
-            throw new JsonEncodeException;
+            throw new JsonEncodeException();
         }
-        
+
         return $this->validateJsonString($json, $definition);
     }
 
@@ -72,7 +73,7 @@ class InvoiceValidator
     {
         $obj = json_decode($json);
         if ($obj === null) {
-            throw new JsonDecodeException;
+            throw new JsonDecodeException();
         }
 
         $this->getValidator($definition)->reset();

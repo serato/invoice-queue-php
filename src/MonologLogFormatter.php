@@ -1,4 +1,5 @@
 <?php
+
 namespace Serato\InvoiceQueue;
 
 use Monolog\Formatter\JsonFormatter;

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Serato\InvoiceQueue\Test;
@@ -18,7 +19,7 @@ class InvoiceTest extends AbstractTestCase
      */
     public function testLoadWithValidArrayData()
     {
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
         $invoice = Invoice::load($this->getValidInvoiceData(), $validator);
         $this->assertEquals($this->getValidInvoiceData(), $invoice->getData());
         $this->assertEquals(1, count($invoice->getItems()));
@@ -32,7 +33,7 @@ class InvoiceTest extends AbstractTestCase
      */
     public function testLoadWithInvalidArrayData()
     {
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
         $invoice = Invoice::load($this->getInvalidInvoiceData(), $validator);
     }
 
@@ -49,7 +50,7 @@ class InvoiceTest extends AbstractTestCase
             throw new Exception("Can't JSON encode array");
         }
 
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
         $invoice = Invoice::load($json, $validator);
         $this->assertEquals($this->getValidInvoiceData(), $invoice->getData());
         $this->assertEquals(1, count($invoice->getItems()));
@@ -69,7 +70,7 @@ class InvoiceTest extends AbstractTestCase
             throw new Exception("Can't JSON encode array");
         }
 
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
         $invoice = Invoice::load($json, $validator);
     }
 

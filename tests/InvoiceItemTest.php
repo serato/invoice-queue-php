@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Serato\InvoiceQueue\Test;
@@ -17,7 +18,7 @@ class InvoiceItemTest extends AbstractTestCase
      */
     public function testLoadWithValidData()
     {
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
         $invoiceItem = InvoiceItem::load($this->getValidInvoiceData(), $validator);
         $this->assertEquals($this->getValidInvoiceData(), $invoiceItem->getData());
     }
@@ -30,7 +31,7 @@ class InvoiceItemTest extends AbstractTestCase
      */
     public function testLoadWithInvalidData()
     {
-        $validator = new InvoiceValidator;
+        $validator = new InvoiceValidator();
         $invoiceItem = InvoiceItem::load($this->getInvalidInvoiceData(), $validator);
     }
 
