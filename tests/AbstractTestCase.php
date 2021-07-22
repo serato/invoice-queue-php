@@ -14,8 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 abstract class AbstractTestCase extends TestCase
 {
-    protected const LOG_FILE_PATH = '/srv/www/shared/phpunit.log';
-
     /** @var MockHandler */
     private $mockHandler;
 
