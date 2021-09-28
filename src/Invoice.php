@@ -83,6 +83,7 @@ class Invoice extends AbstractDataContainer
     public const TAXCODE_V = 'V';
     public const TAXCODE_S = 'S';
     public const TAXCODE_Z = 'Z';
+    public const TAXCODE_C = 'C';
 
     /** @var array */
     private $items = [];
