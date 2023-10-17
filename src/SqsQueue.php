@@ -461,7 +461,8 @@ class SqsQueue
             array_merge(
                 ['result_code' => $resultCode],
                 $context,
-                ['queue_name' => $this->getQueueName()]
+                ['queue_name' => $this->getQueueName()],
+                ['stream' => 'sqs-message-queue']
             )
         );
     }
