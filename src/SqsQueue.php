@@ -455,6 +455,7 @@ class SqsQueue
 
     private function logQueueSendResult(string $level, int $resultCode, string $message, array $context): void
     {
+        $context['stream'] = 'sqs-message-queue';
         $this->logger->log(
             $level,
             $message,
