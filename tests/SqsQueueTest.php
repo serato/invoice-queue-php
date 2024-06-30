@@ -33,6 +33,7 @@ class SqsQueueTest extends AbstractTestCase
 
     /**
      * Tests that the appropriate API calls when SqsQueue::getQueueUrl is called and the queues don't exist.
+     * @throws Exception
      */
     public function testGetQueueUrlViaQueueCreation(): void
     {

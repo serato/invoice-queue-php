@@ -176,9 +176,9 @@ class SqsQueue
                     return [
                         'QueueName' => $this->getQueueName(),
                         'Attributes' => [
-                            'MessageRetentionPeriod' => 345600, # 4 days
-                            'VisibilityTimeout' => 60,
-                            'ReceiveMessageWaitTimeSeconds' => 20, # Create queue with long polling enabled
+                            'MessageRetentionPeriod' => '345600', # 4 days
+                            'VisibilityTimeout' => '60',
+                            'ReceiveMessageWaitTimeSeconds' => '20', # Create queue with long polling enabled
                             'FifoQueue' => 'true',
                             'ContentBasedDeduplication' => 'true',
                             'RedrivePolicy' => json_encode([
@@ -207,9 +207,9 @@ class SqsQueue
                     return [
                         'QueueName' => $this->getDeadLetterQueueName(),
                         'Attributes' => [
-                            'MessageRetentionPeriod' => 1209600, # 14 days (the maximum allowed by SQS)
-                            'VisibilityTimeout' => 180,
-                            'ReceiveMessageWaitTimeSeconds' => 20, # Create queue with long polling enabled
+                            'MessageRetentionPeriod' => '1209600', # 14 days (the maximum allowed by SQS)
+                            'VisibilityTimeout' => '180',
+                            'ReceiveMessageWaitTimeSeconds' => '20', # Create queue with long polling enabled
                             'FifoQueue' => 'true'
                         ]
                     ];

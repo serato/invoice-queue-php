@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Serato\InvoiceQueue\Test;
 
+use Serato\InvoiceQueue\Error\InvalidMethodNameError;
 use Serato\InvoiceQueue\Test\AbstractTestCase;
 use Serato\InvoiceQueue\Invoice;
 use Serato\InvoiceQueue\InvoiceValidator;
@@ -58,29 +59,23 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
         return $data;
     }
 
-    /**
-     * @expectedException \Serato\InvoiceQueue\Error\InvalidMethodNameError
-     */
     public function testInvalidMethodName()
     {
+        $this->expectException(InvalidMethodNameError::class);
         $invoice = Invoice::create();
         $invoice->noSuchMethod();
     }
 
-    /**
-     * @expectedException \Serato\InvoiceQueue\Error\InvalidMethodNameError
-     */
     public function testInvalidGetMethodName()
     {
+        $this->expectException(InvalidMethodNameError::class);
         $invoice = Invoice::create();
         $invoice->getNoSuchMethod();
     }
 
-    /**
-     * @expectedException \Serato\InvoiceQueue\Error\InvalidMethodNameError
-     */
     public function testInvalidSetMethodName()
     {
+        $this->expectException(InvalidMethodNameError::class);
         $invoice = Invoice::create();
         $invoice->setNoSuchMethod('val');
     }
@@ -88,10 +83,11 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
     /**
      * Provide an argument to set method (set methods expect 0 args)
      *
-     * @expectedException \ArgumentCountError
+     *
      */
     public function testInvalidGetMethodArgs()
     {
+        $this->expectException(\ArgumentCountError::class);
         $invoice = Invoice::create();
         $invoice->getSource('val');
     }
@@ -99,10 +95,11 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
     /**
      * Provide no arguments to get method (get methods expect 1 arg)
      *
-     * @expectedException \ArgumentCountError
+     *
      */
     public function testInvalidSetMethodArgs1()
     {
+        $this->expectException(\ArgumentCountError::class);
         $invoice = Invoice::create();
         $invoice->setSource();
     }
@@ -110,10 +107,11 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
     /**
      * Provide 2 arguments to get method (get methods expect 1 arg)
      *
-     * @expectedException \ArgumentCountError
+     *
      */
     public function testInvalidSetMethodArgs2()
     {
+        $this->expectException(\ArgumentCountError::class);
         $invoice = Invoice::create();
         $invoice->setSource('val', 'val');
     }
@@ -121,10 +119,11 @@ class InvoiceMagicMethodsTest extends AbstractTestCase
     /**
      * Pass an argument of incorrect type to set method
      *
-     * @expectedException \TypeError
+     *
      */
     public function testInvalidSetMethodArgType()
     {
+        $this->expectException(\TypeError::class);
         $invoice = Invoice::create();
         $invoice->setSource(0);
     }

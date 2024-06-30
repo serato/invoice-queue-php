@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Serato\InvoiceQueue\Test;
 
+use Serato\InvoiceQueue\Exception\ValidationException;
 use Serato\InvoiceQueue\Test\AbstractTestCase;
 use Serato\InvoiceQueue\Invoice;
 use Serato\InvoiceQueue\InvoiceItem;
@@ -27,10 +28,10 @@ class InvoiceItemTest extends AbstractTestCase
      * Tests the Load method with invalid data
      *
      * @return void
-     * @expectedException \Serato\InvoiceQueue\Exception\ValidationException
      */
     public function testLoadWithInvalidData(): void
     {
+        $this->expectException(ValidationException::class);
         $validator = new InvoiceValidator();
         $invoiceItem = InvoiceItem::load($this->getInvalidInvoiceData(), $validator);
     }
