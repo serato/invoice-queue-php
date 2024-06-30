@@ -8,9 +8,12 @@ use RuntimeException;
 
 class ValidationException extends RuntimeException
 {
-    /** @var array */
+    /** @var Array<mixed> */
     private $validationErrors;
 
+    /**
+     * @param Array<mixed> $errors
+     */
     public function __construct(array $errors)
     {
         $this->validationErrors = $errors;
@@ -29,7 +32,7 @@ class ValidationException extends RuntimeException
     /**
      * Returns valdidation errors
      *
-     * @return array
+     * @return Array<mixed>
      */
     public function getValidationErrors(): array
     {

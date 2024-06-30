@@ -12,16 +12,16 @@ namespace Serato\InvoiceQueue\Test;
  */
 class SqsQueueCallbackTester extends AbstractTestCase
 {
-    /** @var array */
+    /** @var Array<mixed> */
     public $successfulInvoices;
 
-    /** @var array */
+    /** @var Array<mixed> */
     public $failedInvoices;
     /**
      * Callable for handling the SqsQueue::onSendMessageBatch callback
      *
-     * @param array $successfulInvoices
-     * @param array $failedInvoices
+     * @param Array<mixed> $successfulInvoices
+     * @param Array<mixed> $failedInvoices
      * @return void
      */
     public function __invoke(array $successfulInvoices, array $failedInvoices): void

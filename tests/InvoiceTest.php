@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Serato\InvoiceQueue\Test;
 
+use Serato\InvoiceQueue\Exception\ValidationException;
 use Serato\InvoiceQueue\Test\AbstractTestCase;
 use Serato\InvoiceQueue\Invoice;
 use Serato\InvoiceQueue\InvoiceItem;
@@ -17,7 +18,7 @@ class InvoiceTest extends AbstractTestCase
      *
      * @return void
      */
-    public function testLoadWithValidArrayData()
+    public function testLoadWithValidArrayData(): void
     {
         $validator = new InvoiceValidator();
         $invoice = Invoice::load($this->getValidInvoiceData(), $validator);
@@ -29,10 +30,10 @@ class InvoiceTest extends AbstractTestCase
      * Tests the Load method with invalid array data
      *
      * @return void
-     * @expectedException \Serato\InvoiceQueue\Exception\ValidationException
      */
-    public function testLoadWithInvalidArrayData()
+    public function testLoadWithInvalidArrayData(): void
     {
+        $this->expectException(ValidationException::class);
         $validator = new InvoiceValidator();
         $invoice = Invoice::load($this->getInvalidInvoiceData(), $validator);
     }
@@ -42,7 +43,7 @@ class InvoiceTest extends AbstractTestCase
      *
      * @return void
      */
-    public function testLoadWithValidStringData()
+    public function testLoadWithValidStringData(): void
     {
         $json = json_encode($this->getValidInvoiceData());
         if ($json === false) {
@@ -60,10 +61,10 @@ class InvoiceTest extends AbstractTestCase
      * Tests the Load method with invalid string data
      *
      * @return void
-     * @expectedException \Serato\InvoiceQueue\Exception\ValidationException
      */
-    public function testLoadWithInvalidStringData()
+    public function testLoadWithInvalidStringData(): void
     {
+        $this->expectException(ValidationException::class);
         $json = json_encode($this->getInvalidInvoiceData());
         if ($json === false) {
             # This won't happen. The check is only here to phpstan happy :-)
@@ -79,7 +80,7 @@ class InvoiceTest extends AbstractTestCase
      *
      * @return void
      */
-    public function testSetItemMethod()
+    public function testSetItemMethod(): void
     {
         $item = InvoiceItem::create();
         $item
@@ -106,7 +107,10 @@ class InvoiceTest extends AbstractTestCase
         $this->assertEquals(2, count($data['items']));
     }
 
-    private function getValidInvoiceData()
+    /**
+     * @return Array<mixed>
+     */
+    private function getValidInvoiceData(): array
     {
         return  [
             'source' => Invoice::SOURCE_SWSEC,
@@ -145,7 +149,10 @@ class InvoiceTest extends AbstractTestCase
         ];
     }
 
-    private function getInvalidInvoiceData()
+    /**
+     * @return Array<mixed>
+     */
+    private function getInvalidInvoiceData(): array
     {
         return  [
             # 'source' => Invoice::SOURCE_SWSEC, # Missing required field

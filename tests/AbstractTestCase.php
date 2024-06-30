@@ -27,7 +27,7 @@ abstract class AbstractTestCase extends TestCase
      * Constructs a test case with the given name.
      *
      * @param string $name
-     * @param array  $data
+     * @param Array<mixed>  $data
      * @param string $dataName
      */
     public function __construct($name = null, array $data = array(), $dataName = '')
@@ -37,7 +37,7 @@ abstract class AbstractTestCase extends TestCase
         error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->logFilePath = sys_get_temp_dir() . '/php-unit-log.log';
         $this->logger = new Logger("PHP-Unit-Logger");
@@ -48,7 +48,7 @@ abstract class AbstractTestCase extends TestCase
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if (file_exists($this->getLogFilePath())) {
             unlink($this->getLogFilePath());
@@ -67,7 +67,7 @@ abstract class AbstractTestCase extends TestCase
     }
 
     /**
-     * @param array $mockResults    An array of mock results to return from SDK clients
+     * @param Array<mixed> $mockResults    An array of mock results to return from SDK clients
      * @return Sdk
      */
     protected function getMockedAwsSdk(array $mockResults = []): Sdk
@@ -92,7 +92,7 @@ abstract class AbstractTestCase extends TestCase
      *
      * @return int
      */
-    protected function getAwsMockHandlerStackCount()
+    protected function getAwsMockHandlerStackCount(): int
     {
         return $this->mockHandler->count();
     }

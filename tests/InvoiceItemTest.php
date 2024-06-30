@@ -16,7 +16,7 @@ class InvoiceItemTest extends AbstractTestCase
      *
      * @return void
      */
-    public function testLoadWithValidData()
+    public function testLoadWithValidData(): void
     {
         $validator = new InvoiceValidator();
         $invoiceItem = InvoiceItem::load($this->getValidInvoiceData(), $validator);
@@ -29,13 +29,16 @@ class InvoiceItemTest extends AbstractTestCase
      * @return void
      * @expectedException \Serato\InvoiceQueue\Exception\ValidationException
      */
-    public function testLoadWithInvalidData()
+    public function testLoadWithInvalidData(): void
     {
         $validator = new InvoiceValidator();
         $invoiceItem = InvoiceItem::load($this->getInvalidInvoiceData(), $validator);
     }
 
-    private function getValidInvoiceData()
+    /**
+     * @return Array<mixed>
+     */
+    private function getValidInvoiceData(): array
     {
         return  [
             'sku' => 'SKU1',
@@ -48,7 +51,10 @@ class InvoiceItemTest extends AbstractTestCase
         ];
     }
 
-    private function getInvalidInvoiceData()
+    /**
+     * @return Array<mixed>
+     */
+    private function getInvalidInvoiceData(): array
     {
         return  [
             # 'sku' => 'SKU1', # Missing required field

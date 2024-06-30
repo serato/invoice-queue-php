@@ -33,7 +33,7 @@ class SqsQueueIntegrationTest extends AbstractTestCase
      *
      * @group aws-integration
      */
-    public function testSendInvoiceToBatch()
+    public function testSendInvoiceToBatch(): void
     {
         $validator = new InvoiceValidator();
 
@@ -82,7 +82,10 @@ class SqsQueueIntegrationTest extends AbstractTestCase
         );
     }
 
-    private function getValidInvoiceData()
+    /**
+     * @return Array<mixed>[]
+     */
+    private function getValidInvoiceData(): array
     {
         $ts = date('His');
         return [

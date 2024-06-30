@@ -47,7 +47,7 @@ class SqsQueue
     /** @var string */
     private $deadLetterQueueUrl;
 
-    /** @var array */
+    /** @var Array<mixed> */
     private $messageBatch = [
         'invoices' => [],
         'sqsParams' => []
@@ -312,10 +312,10 @@ class SqsQueue
     /**
      * Converts an Invoice into a param array suitable for sending to an SQS queue.
      *
-     * @param Invoice   $invoice
-     * @param string    $batchMessageId     An ID that is unique within a batch of messages
+     * @param Invoice $invoice
+     * @param string|null $batchMessageId An ID that is unique within a batch of messages
      *                                      (required for batch operations)
-     * @return array
+     * @return Array<mixed>
      */
     private function invoiceToSqsSendParams(Invoice $invoice, string $batchMessageId = null): array
     {
@@ -345,9 +345,9 @@ class SqsQueue
     }
 
     /**
-     * @return Result | null
+     * @return void
      */
-    private function sendMessageBatch(): ?Result
+    private function sendMessageBatch(): void
     {
         if (count($this->messageBatch['invoices']) > 0) {
             try {
@@ -393,7 +393,6 @@ class SqsQueue
                 if ($this->onSendMessageBatch !== null && is_callable($this->onSendMessageBatch)) {
                     call_user_func($this->onSendMessageBatch, $success, $failure);
                 }
-                return $result;
             } catch (AwsException $e) {
                 # The entire batch failed :-(
                 foreach ($this->messageBatch['invoices'] as $invoiceId => $invoice) {
@@ -413,26 +412,19 @@ class SqsQueue
                 }
                 $this->throwQueueSendException($e);
             }
-            # Reset the batch even in event of a failure otherwise we'll
-            # keep retrying indefinitely.
-            $this->messageBatch = [
-                'invoices' => [],
-                'sqsParams' => []
-            ];
         }
-        return null;
     }
 
     /**
      * Throws a `QueueSendException` exception in response to catching an
-     * `AwsException` exception.
+     *  `AwsException` exception.
      *
-     * Uses the`AwsException` instance to create a meaningful error message when
-     * throwing the `QueueSendException` exception.
-     *
-     * @throws QueueSendException
+     *  Uses the`AwsException` instance to create a meaningful error message when
+     *  throwing the `QueueSendException` exception.
+     * @param AwsException $e
+     * @return void
      */
-    private function throwQueueSendException(AwsException $e)
+    private function throwQueueSendException(AwsException $e): void
     {
         $msg = 'Error sending message to SQS queue `' . $this->getQueueName() .
                 '`.' . PHP_EOL .
@@ -453,6 +445,13 @@ class SqsQueue
         throw new QueueSendException($msg);
     }
 
+    /**
+     * @param string $level
+     * @param int $resultCode
+     * @param string $message
+     * @param Array<mixed> $context
+     * @return void
+     */
     private function logQueueSendResult(string $level, int $resultCode, string $message, array $context): void
     {
         $context['stream'] = 'sqs-message-queue';

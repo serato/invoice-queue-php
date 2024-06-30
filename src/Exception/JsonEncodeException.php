@@ -8,5 +8,8 @@ use RuntimeException;
 
 class JsonEncodeException extends RuntimeException
 {
+    /**
+     * @var string
+     */
     protected $message = 'JSON encode error. Unable to JSON encode data.';
 }
