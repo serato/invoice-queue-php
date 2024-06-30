@@ -61,7 +61,7 @@ abstract class AbstractDataContainer
      * @param InvoiceValidator|null $validator
      * @throws ValidationException
      */
-   final private function __construct($data = null, ?InvoiceValidator $validator = null)
+    final private function __construct($data = null, ?InvoiceValidator $validator = null)
     {
         if ($data === null) {
             $this->setData(static::getBaseData());
