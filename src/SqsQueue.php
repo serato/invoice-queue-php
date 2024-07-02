@@ -412,6 +412,10 @@ class SqsQueue
                 }
                 $this->throwQueueSendException($e);
             }
+            $this->messageBatch = [
+                'invoices' => [],
+                'sqsParams' => []
+            ];
         }
     }
 
