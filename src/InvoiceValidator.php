@@ -21,10 +21,10 @@ class InvoiceValidator
     /** @var string */
     private $schemaFilePath;
 
-    /** @var array */
+    /** @var Array<mixed> */
     private $schemaObjects;
 
-    /** @var array */
+    /** @var Array<mixed> */
     private $validators;
 
     public function __construct()
@@ -41,7 +41,7 @@ class InvoiceValidator
     /**
      * Validates an array against the schema.
      *
-     * @param array $data
+     * @param Array<mixed> $data
      * @param string|null $definition
      * @return bool
      *
@@ -86,7 +86,7 @@ class InvoiceValidator
      * Returns error from the most recent self::validate execution
      *
      * @param string|null $definition
-     * @return array
+     * @return Array<mixed>
      */
     public function getErrors(?string $definition = null): array
     {

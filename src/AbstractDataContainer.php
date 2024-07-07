@@ -45,7 +45,7 @@ use Exception;
  */
 abstract class AbstractDataContainer
 {
-    /** @var array */
+    /** @var Array<string, mixed> */
     protected $data = [];
 
     /** @var InvoiceValidator */
@@ -57,11 +57,11 @@ abstract class AbstractDataContainer
      * Optionally takes a array of data, $data, and InvoiceValidator instance with which to populate
      * the object.
      *
-     * @param array|string|null $data
+     * @param Array<string, mixed>|string|null $data
      * @param InvoiceValidator|null $validator
      * @throws ValidationException
      */
-    private function __construct($data = null, ?InvoiceValidator $validator = null)
+    final private function __construct($data = null, ?InvoiceValidator $validator = null)
     {
         if ($data === null) {
             $this->setData(static::getBaseData());
@@ -98,7 +98,7 @@ abstract class AbstractDataContainer
      *         'net_tax_amount' => 'integer'
      *    ];
      *
-     * @return array
+     * @return Array<string, mixed>
      */
     abstract protected static function getDataKeys(): array;
 
@@ -114,7 +114,7 @@ abstract class AbstractDataContainer
     /**
      * Defines the base array structure for a new object instance
      *
-     * @return array
+     * @return Array<string, mixed>
      */
     abstract protected static function getBaseData(): array;
 
@@ -123,7 +123,7 @@ abstract class AbstractDataContainer
      *
      * The array structure conforms to the JSON schema used by Serato\InvoiceQueue\InvoiceValidator.
      *
-     * @return array
+     * @return Array<string, mixed>
      */
     final public function getData(): array
     {
@@ -135,7 +135,7 @@ abstract class AbstractDataContainer
      *
      * @return static
      */
-    final public static function create()
+    final public static function create(): AbstractDataContainer
     {
         return new static();
     }
@@ -143,11 +143,11 @@ abstract class AbstractDataContainer
     /**
      * Creates an instance from an array.
      *
-     * @param array|string $data
+     * @param Array<string, mixed>|string $data
      * @param InvoiceValidator|null $validator
      * @return static
      */
-    final public static function load($data, ?InvoiceValidator $validator)
+    final public static function load($data, ?InvoiceValidator $validator): AbstractDataContainer
     {
         return new static($data, $validator);
     }
@@ -155,7 +155,7 @@ abstract class AbstractDataContainer
     /**
      * Sets the underlying data array
      *
-     * @param array $data
+     * @param Array<string, mixed> $data
      * @return void
      */
     protected function setData(array $data): void
@@ -164,10 +164,10 @@ abstract class AbstractDataContainer
     }
 
     /**
-     * @return mixed
-     * @throws InvalidMethodNameError
-     * @throws ArgumentCountError
-     * @throws TypeError
+     * @param string $methodName
+     * @param Array<mixed> $args
+     * @return $this|mixed|null
+     * @throws Exception
      */
     public function __call(string $methodName, array $args)
     {
@@ -212,7 +212,7 @@ abstract class AbstractDataContainer
      */
     protected function getDataProp(string $dataPropName)
     {
-        return isset($this->data[$dataPropName]) ? $this->data[$dataPropName] : null;
+        return $this->data[$dataPropName] ?? null;
     }
 
     /**
@@ -222,7 +222,7 @@ abstract class AbstractDataContainer
      * @param mixed $val
      * @return self
      */
-    protected function setDataProp(string $dataPropName, $val)
+    protected function setDataProp(string $dataPropName, $val): AbstractDataContainer
     {
         $this->data[$dataPropName] = $val;
         return $this;
@@ -232,9 +232,10 @@ abstract class AbstractDataContainer
      * Maps a camel cased get or set method name to an internal snake cased data array key
      *
      * @param string $methodName
+     * @param string $methodPrefix
      * @return string
      *
-     * @throws InvalidMethodNameError
+     * @throws Exception
      */
     private function getDataPropertyName(string $methodName, string $methodPrefix): string
     {

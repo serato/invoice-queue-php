@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Serato\InvoiceQueue\Test;
 
+use JsonSchema\Exception\JsonDecodingException;
+use Serato\InvoiceQueue\Exception\JsonDecodeException;
+use Serato\InvoiceQueue\Exception\JsonEncodeException;
 use Serato\InvoiceQueue\Test\AbstractTestCase;
 use Serato\InvoiceQueue\InvoiceValidator;
 
@@ -14,12 +17,12 @@ class InvoiceValidatorTest extends AbstractTestCase
      *
      * @param string|null $ref
      * @param boolean $isValid
-     * @param array $data
+     * @param Array<mixed> $data
      * @return void
      *
      * @dataProvider validateDataProvider
      */
-    public function testValidate(?string $ref, bool $isValid, array $data)
+    public function testValidate(?string $ref, bool $isValid, array $data): void
     {
         $validator = new InvoiceValidator();
         $bVal = $validator->validateArray($data, $ref);
@@ -27,7 +30,10 @@ class InvoiceValidatorTest extends AbstractTestCase
         $this->assertEquals($isValid, $bVal);
     }
 
-    public function validateDataProvider()
+    /**
+     * @return Array<mixed>
+     */
+    public function validateDataProvider(): array
     {
         $items = [];
 
@@ -47,25 +53,30 @@ class InvoiceValidatorTest extends AbstractTestCase
     }
 
     /**
-     * @expectedException \Serato\InvoiceQueue\Exception\JsonDecodeException
+     * @return void
      */
-    public function testInvalidJsonString()
+    public function testInvalidJsonString(): void
     {
+        $this->expectException(JsonDecodeException::class);
         $validator = new InvoiceValidator();
         $validator->validateJsonString('');
     }
 
     /**
-     * @expectedException \Serato\InvoiceQueue\Exception\JsonEncodeException
+     * @return void
      */
-    public function testFailedJsonEncode()
+    public function testFailedJsonEncode(): void
     {
+        $this->expectException(JsonEncodeException::class);
         $fp = fopen(__DIR__ . '/resources/schema_validation_data/line_item.php', 'r');
         $validator = new InvoiceValidator();
         $validator->validateArray(['fp' => $fp]);
     }
 
-    public function testMultipleUsesOfSingleInstance()
+    /**
+     * @return void
+     */
+    public function testMultipleUsesOfSingleInstance(): void
     {
         $validator = new InvoiceValidator();
 

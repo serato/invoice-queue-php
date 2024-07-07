@@ -85,7 +85,7 @@ class Invoice extends AbstractDataContainer
     public const TAXCODE_Z = 'Z';
     public const TAXCODE_C = 'C';
 
-    /** @var array */
+    /** @var Array<mixed> */
     private $items = [];
 
     /**
@@ -155,7 +155,7 @@ class Invoice extends AbstractDataContainer
     /**
      * Returns an array of InvoiceItem instances
      *
-     * @return array
+     * @return Array<mixed>
      */
     public function getItems(): array
     {
@@ -163,7 +163,8 @@ class Invoice extends AbstractDataContainer
     }
 
     /**
-     * {@inheritDoc}
+     * @param Array<mixed> $data
+     * @return void
      */
     protected function setData(array $data): void
     {
@@ -181,7 +182,7 @@ class Invoice extends AbstractDataContainer
      * Provided as a separate method so that it can be overridden in child classes that may
      * choose to use inherited InvoiceItem classes
      *
-     * @param array $data
+     * @param Array<mixed> $data
      * @return mixed
      */
     protected function createInvoiceItemFromData(array $data)
@@ -196,9 +197,7 @@ class Invoice extends AbstractDataContainer
     {
         if (strpos($dataPropName, 'billing_address_') === 0) {
             $dataPropName = $this->getBillingAddressDataPropertyName($dataPropName);
-            return isset($this->data['billing_address'][$dataPropName]) ?
-                $this->data['billing_address'][$dataPropName] :
-                null;
+            return $this->data['billing_address'][$dataPropName] ?? null;
         } else {
             return parent::getDataProp($dataPropName);
         }
@@ -207,7 +206,7 @@ class Invoice extends AbstractDataContainer
     /**
      * {@inheritDoc}
      */
-    protected function setDataProp(string $dataPropName, $val)
+    protected function setDataProp(string $dataPropName, $val): AbstractDataContainer
     {
         if (strpos($dataPropName, 'billing_address_') === 0) {
             $dataPropName = $this->getBillingAddressDataPropertyName($dataPropName);

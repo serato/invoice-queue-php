@@ -14,7 +14,8 @@ use Monolog\Formatter\JsonFormatter;
 class MonologLogFormatter extends JsonFormatter
 {
     /**
-     * {@inheritDoc}
+     * @param Array<mixed> $record
+     * @return string
      */
     public function format(array $record): string
     {
